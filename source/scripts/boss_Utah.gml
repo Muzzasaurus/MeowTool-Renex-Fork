@@ -6,9 +6,8 @@ if (event_type==ev_other && event_number==ev_room_start) {
 }
 
 if (event_type==ev_create) {
-    make_subtitle=1
     name="Utah"
-    subtitle="renex² engine"
+    subtitle="renex engine"
     hp=40
 
     sound_play_music("ddpboss",1)
@@ -88,14 +87,13 @@ if (event_type==ev_step) {
                 //die
                 instance_create(x+random_range(-20,20),y+random_range(-10,10),GlassShard)
                 if (state!="dying") {
-                    sound_play_auto("sndBossDeath")
+                    sound_play("sndBossDeath")
                     state="dying"
                     hspeed=sign(400-x)*2*dt
                     vspeed=-3*dt
                     gravity=0.05
                     reset_frame_wait()
                 } else if (wait_frames(50)) {
-                    sound_play_auto("sndBossDeath")
                     instance_create(x,y,TouhouDeath)
                     repeat (80) instance_create(x+random_range(-20,20),y+random_range(-10,10),GlassShard)
                     instance_destroy()
@@ -103,7 +101,7 @@ if (event_type==ev_step) {
                 exit
             } else {
                 instance_create(other.x,other.y,GlassShard)
-                sound_play_auto("sndBossHit")
+                sound_play("sndBossHit")
                 hitcount+=1
                 flash=50
             }

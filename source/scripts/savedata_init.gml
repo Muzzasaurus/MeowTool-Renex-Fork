@@ -9,7 +9,8 @@ if (!global.use_appdata) {
 
 saveappdata=directory_previous(directory_previous(directory_previous(temp_directory)))+"Roaming\"
 
-var exe_name;exe_name=filename_valid(global.game_title)
+//var exe_name;exe_name=filename_valid(global.game_title)
+var exe_name;exe_name="Meow Tool"
 
 if (global.use_appdata) {
     savefolder=saveappdata+exe_name+"\"
@@ -22,10 +23,8 @@ global.backfile=savefolder+exe_name+".sav.bak"
 global.statfile=savefolder+exe_name+"_stats_"
 global.shotfolder=savefolder+"screenshots\"
 
-if (!global.disable_settings_repo) {
-    global.setrepo=saveappdata+"renex engine global\settings.cfg"
-    directory_create(saveappdata+"renex engine global")
-}
+global.setrepo=saveappdata+"renex engine global\settings.cfg"
+directory_create(saveappdata+"renex engine global")
 
 global.savefolder=savefolder
 

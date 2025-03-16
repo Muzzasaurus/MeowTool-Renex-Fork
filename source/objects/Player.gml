@@ -13,6 +13,11 @@ jump2=7
 maxjumps=2
 
 
+//player simulation speed multiplier
+//you can change this to make the player run slower
+slomo=1
+
+
 //these values are used to reset the player when disabling gimmicks such as beams and fields
 maxSpeedDefault=3
 baseGravDefault=0.4
@@ -20,7 +25,7 @@ maxVspeed=9
 
 
 //turn on bow when difficulty is 0
-bow=(difficulty==0)
+bow=false
 
 
 //variables for optional player momentum system
@@ -36,6 +41,12 @@ applies_to=self
 */
 ///initialize variables
 //you usually don't need to change any of these, they're mostly used for gimmicks
+idle_timer = 0
+fricSpeed = false
+decRateDefault = 0.1
+decRate = 0.1
+suspended = false
+invis = false
 
 djump=1
 ladder=false
@@ -45,18 +56,23 @@ ladderjump=false
 hang=false
 dot_hitbox=false
 dotkid=false
-telekid=false
+shootkid=false
 onfire=false
 vvvvvv=false
+
+godMode=savedatap("godMode")
+infJump=savedatap("infJump")
+trailView=savedatap("trailView")
 
 cherried=false
 cherried_antigrav=false
 cherried_fireball=false
 reversed=false
-infjump=0
 
 dead=false
 activated=true
+
+oldslomo=-1
 
 coyoteTime=0
 jump_timer=0
@@ -109,9 +125,38 @@ iframes=0
 input_h=0 input_v=0
 
 drawhp=0
+vineMap=ds_map_create()
+
+updraftStrength=0.8 //default: 0.8
 
 input_clear()
 input_consume()
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///Zero grav variables
+entered=false
+ho=0
+vo=0
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///Arrays
+trailLength = savedatap("trailLength")
+trailAlpha = 0.25
+
+for (i=0; i<trailLength; i+=1) {
+    xarray[i]=x
+    yarray[i]=y
+    spriteindexarray[i]=sprite_index
+    imageindexarray[i]=image_index
+    facingarray[i]=facing
+    vfliparray[i]=vflip
+}
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -153,10 +198,15 @@ applies_to=self
 
 */
 
+//slow down music
+if (slomo!=oldslomo)
+    sound_kind_pitch(1,slomo)
+oldslomo=slomo
+
 updating=0
 if (!frozen) {
     //add how much time has passed since last frame
-    stepcount+=50/global.game_speed*global.slomo
+    stepcount+=50/room_speed*slomo
     //is another frame in order?
     if (roundto(stepcount,0.00001)>=1) {
         updating=true
@@ -166,8 +216,11 @@ if (!frozen) {
     framefac=stepcount+0.5
 }
 
-//don't smooth if the room speed is 50 and not doing slow motion
-if (global.game_speed==50 && global.slomo==1) framefac=ff_immediate
+//don't smooth if the room speed is 50
+if (global.game_speed==50 && slomo==1) framefac=2
+
+//disable delta time (but before dead check)
+if (global.disable_delta_time and !frozen) updating=1
 
 //don't update while dead
 if (dead || !activated) updating=0
@@ -246,7 +299,28 @@ if (!frozen) {
     }
 
     //reset to default
-    maxSpeed = maxSpeedDefault
+    if(!fricSpeed or (idle_timer >= 4 and !suspended)) {
+        maxSpeed = maxSpeedDefault
+        idle_timer = 0
+    }
+    else {
+        if(input_h == 0)
+            idle_timer += 1
+        else
+            idle_timer = 0
+
+        if (maxSpeed > maxSpeedDefault) {
+            if (!onPlatform && !onGround)
+                maxSpeed -= decRate
+            else
+                maxSpeed -= decRate*1.5
+        }
+        else {
+            fricSpeed = false
+            decRate = decRateDefault
+            idle_timer = 0
+        }
+    }
     baseGrav = baseGravDefault
 
     //the beamstate variable contains a bitmask of what beams are currently active
@@ -271,27 +345,90 @@ if (!frozen) {
     //look for ice objects
     slipper=instance_place(x,y+4*vflip,SlipBlock)
 
+    //look for updraft water
+    if (instance_place(x,y+1*vflip,UpdraftWater)) {
+        if (vspeed >= -updraftStrength*7.5) and (vspeed <= -updraftStrength*6.5) {
+            vspeed=-updraftStrength*7.5
+        } else if (vspeed > -updraftStrength*6.2) {
+            vspeed-=updraftStrength
+        }
+    }
+
     //refresh jump when touching a platform cherry
     if (instance_place(x,y,PlatformCherry)) {
         djump=1
     }
 
-    //update vine state
     if (walljumpboost>=0) {
+        //set vars
+        var i,vineMapSize;
         onVineL=false
         onVineR=false
+        onVineType="normal"
 
-        //you can add custom vines here
-        vine_check_left(
-            WallJumpL,
-            CautionStripL,
-            CautionFastL
-        )
-        vine_check_right(
-            WallJumpR,
-            CautionStripR,
-            CautionFastR
-        )
+        //update ds map
+        ds_map_set(vineMap,0,instance_place(x-1,y,WallJumpL))
+        ds_map_set(vineMap,1,instance_place(x+1,y,WallJumpR))
+        ds_map_set(vineMap,2,instance_place(x-1,y,CautionStripL))
+        ds_map_set(vineMap,3,instance_place(x+1,y,CautionStripR))
+        ds_map_set(vineMap,4,instance_place(x-1,y,CautionFastL))
+        ds_map_set(vineMap,5,instance_place(x+1,y,CautionFastR))
+        //add your own vines here
+        //don't forget to have L before R
+        
+        //update map size
+        vineMapSize=ds_map_size(vineMap)+1
+        
+        if (!global.clean_vines) {
+            //regular vines
+            if (!onGround) {
+                //check ds map when in the air
+                for (i=0; i<vineMapSize; i+=1) {
+                   if (ds_map_find_value(vineMap,i)) {
+                        //set L or R
+                        if (i mod 2==0) onVineL=true
+                        else onVineR=true
+                        
+                        //set vine type
+                        switch (i) {
+                            case 0: onVineType="normal" break
+                            case 1: onVineType="normal" break
+                            case 2: onVineType="caution" break
+                            case 3: onVineType="caution" break
+                            case 4: onVineType="cautionfast" break
+                            case 5: onVineType="cautionfast" break
+                            //add your vine types here
+                        }
+                   }
+                }
+                //end of for loop 
+            }
+        } else {
+            //clean vines
+            if (!onPlatform && !onGround) {
+                //check ds map when in the air
+                for (i=0; i<vineMapSize; i+=1) {
+                    //prevent air vines from working ------v
+                    if (ds_map_find_value(vineMap,i)) if (ds_map_find_value(vineMap,i).active) {
+                        //set L or R
+                        if (i mod 2==0) onVineL=true
+                        else onVineR=true
+                        
+                        //set vine type
+                        switch (i) {
+                            case 0: onVineType="normal" break
+                            case 1: onVineType="normal" break
+                            case 2: onVineType="caution" break
+                            case 3: onVineType="caution" break
+                            case 4: onVineType="cautionfast" break
+                            case 5: onVineType="cautionfast" break
+                            //add your vine types here
+                        }
+                    }
+                }
+                //end of for loop
+            }
+        }
     }
 }
 /*"/*'/**//* YYD ACTION
@@ -301,7 +438,7 @@ applies_to=self
 */
 ///movement
 
-if (!frozen) {
+if (!frozen) and (!place_meeting(x,y,FakeWarp)) {
     if (!inside_view()) instance_activate_around(Player,64)
 
     //count down jump buffering
@@ -313,6 +450,8 @@ if (!frozen) {
         walljumpboost-=1
     }
 
+    if(!place_meeting(x,y,ZeroGravField)) {
+    
     //move horizontally
     if (walljumpboost<0) {
         //caution strip boosting
@@ -372,23 +511,13 @@ if (!frozen) {
         //discard fractionary component of halign if not moving
         if (hspeed=0 && !global.allow_frac_x_coordinate) x=round(x)
     }
-
+    
+    }
+    
     //vertical speed limit
     if (vflip==-1) vspeed=max(-maxVspeed,vspeed)
     else if (vflip==1) vspeed=min(vspeed,maxVspeed)
 
-    //update ground and platform detection
-    if (onPlatform) {
-        if (!instance_place(x,y+4*vflip+vspeed,Platform) && !coyoteTime) {
-            onPlatform=false
-        }
-    }
-    if (onGround) {
-        if (place_free(x,y+vflip+vspeed) && !instance_place(x,y+4*vflip+vspeed,Platform) && !coyoteTime) {
-            onGround=false
-        }
-    }
-    
     if (!cutscene) {
         //player actions
         
@@ -415,11 +544,34 @@ if (!frozen) {
         }
     }
 
+    //update ground and platform detection
+    if (onPlatform) {
+        if (!instance_place(x,y+4*vflip+vspeed,Platform) && !coyoteTime) {
+            onPlatform=false
+        }
+    }
+    if (onGround) {
+        if (place_free(x,y+vflip+vspeed) && !instance_place(x,y+4*vflip+vspeed,Platform) && !coyoteTime) {
+            onGround=false
+        }
+    }
+
     //update coyote time
     if (coyoteTime!=0) {
         if (global.coyote_time_floating) vspeed-=gravity
         coyoteTime-=1
     }
+}
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///fake warp handling
+if (place_meeting(x,y,FakeWarp)) {
+    gravity=0
+    vspeed=0
+    hspeed=0
 }
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -434,11 +586,11 @@ applies_to=self
 if (global.clean_vines) exit
 
 hang=false
-if (!vvvvvv) if (!onGround || global.floor_vines) {
+if (!vvvvvv) if (!onGround) {
     if (onVineL || onVineR) {
         //touching vine
         hang=true
-        facing=esign(onVineL-onVineR,facing)
+        facing=esign(onVineL-onVineR,1)
 
         vspeed=2*vflip
 
@@ -449,29 +601,48 @@ if (!vvvvvv) if (!onGround || global.floor_vines) {
                 walljump=2
             } else if (djump<maxjumps) {
                 djump+=1
-                sound_play_auto("sndDJump")
+                sound_play_slomo("sndDJump")
             }
         }
 
         //input away from the vine
-        if (onVineL && key_right(vi_pressed))
-        or (onVineR && key_left(vi_pressed))
-        or (key_jump(vi_pressed) && global.maker_vines) {
+        if (
+            (onVineL && key_right(vi_pressed))
+        ||  (onVineR && key_left(vi_pressed))
+        ||  (key_jump(vi_pressed) && global.maker_vines)
+        ) {
             hang=false
             onVineL=false
             onVineR=false
             if (key_jump()) {
                 //jumping off vine
                 walljump=2
-                event_perform_object(onVineType,ev_trigger,tr_vinejump)
+                if (onVineType=="normal") {
+                    hspeed=15*facing
+                    vspeed=-9*vflip
+                }
+                if (onVineType=="caution") {
+                    hspeed=15*facing
+                    vspeed=-9*vflip
+                    walljumpboost=24
+                    walljumpdir=facing
+                }
+                if (onVineType=="cautionfast") {
+                    hspeed=10*facing
+                    vspeed=-10*vflip
+                    altj=2
+                    walljumpboost=-1
+                    walljumpdir=facing
+                }
+                //add custom vines here
             } else {
                 //just moving off vine
                 hspeed=3*facing
             }
-        } else if ((onVineL && key_right()) || (onVineR && key_left())) {
+        }/* else if ((onVineL && key_right()) || (onVineR && key_left())) {
             //slide off of vine if holding the right direction, but not pressing it
             hspeed=3*facing
-        }
+        }*/
     }
 }
 /*"/*'/**//* YYD ACTION
@@ -485,7 +656,7 @@ applies_to=self
 if (!global.clean_vines) exit
 
 hang=false
-if (!vvvvvv) if (!onPlatform || global.floor_vines) {
+if (!vvvvvv) if (!onPlatform) {
     if (onVineL || onVineR) {
         //touching vine
         hang=true
@@ -497,20 +668,44 @@ if (!vvvvvv) if (!onPlatform || global.floor_vines) {
         else if (vflip==1) vspeed=min(vspeed,2)
 
         if (key_jump(vi_pressed)) {
+            //vine jump
             hang=false
             onVineL=false
             onVineR=false
-            if (key_jump()) {
-                //jumping off vine
-                sound_play_auto("sndDJump")
-                sound_play_auto("sndJump")
-                event_perform_object(onVineType,ev_trigger,tr_vinejump)
-            } else {
-                //just moving off vine
-                hspeed=3*facing
+
+            //play vine jump sound
+            sound_play_slomo("sndJump")
+            sound_play_slomo("sndDJump")
+
+            //handle different vine types
+            switch (onVineType) {
+                case "normal": {
+                    walljumpboost=5
+                    walljumpdir=facing
+                    hspeed=3*facing
+                    vspeed=-jump*vflip
+                }break
+                case "caution": {
+                    walljumpboost=24
+                    walljumpdir=facing
+                    hspeed=3*facing
+                    vspeed=-jump*vflip
+                }break
+                case "cautionfast": {
+                    walljumpboost=-1
+                    walljumpdir=facing
+                    altj=2
+                    hspeed=10*facing
+                    vspeed=-jump*vflip
+                }break
             }
-        } else if ((onVineL && key_right()) || (onVineR && key_left())) {
-            //slide off of vine if holding the right direction, but not pressing it
+            //prevent 1fs from fulljumping
+            if (key_jump(vi_released)) player_capjump()
+        } else if ((key_left() && onVineR) || (key_right() && onVineL)) {
+            //moving away from vine
+            hang=false
+            onVineL=false
+            onVineR=false
             hspeed=3*facing
         }
     }
@@ -589,9 +784,9 @@ if (esign(vspeed+gravity,vflip)==vflip) {
     was_on_slope=instance_place(x,y+2*vflip,SlopeParent)
     if (!was_on_slope) is_going_into_slope=instance_place(x+hspeed,y+2*vflip*!dotkid,SlopeParent)
     if (was_on_slope || is_going_into_slope) {
-        x+=round_up(hspeed)
+        x+=hspeed
         if (place_free(x,y)) {
-            if (was_on_slope) if (instance_place(x,y+(abs(hspeed)+6)*vflip,Block)) {
+            if (was_on_slope) if (instance_place(x,y+8*vflip,Block)) {
                 //land on solids moving down
                 //optimization: only check collision once it crosses pixel boundary
                 while (!instance_place(x,y+grav_step,Block)) {store_y=round(y) do y+=grav_step until round(y)!=store_y} y-=grav_step
@@ -600,7 +795,7 @@ if (esign(vspeed+gravity,vflip)==vflip) {
         } else {
             //move up out of ground when walking up slope
             store_y=y
-            move_outside_solid(180-90*vflip,abs(hspeed)+6)
+            move_outside_solid(180-90*vflip,6)
             if (!place_free(x,y)) {
                 //couldn't move out, so it's probably a wall
                 //move back down
@@ -611,7 +806,7 @@ if (esign(vspeed+gravity,vflip)==vflip) {
                 land=1
             }
         }
-        x-=round_up(hspeed)
+        x-=hspeed
     }
 }
 
@@ -649,9 +844,9 @@ if (dotkid) {
 //so we add gravity before checking for collisions
 vspeed+=gravity
 
-if (!place_free(x+round_up(hspeed),y+vspeed)) {
+if (!place_free(x+hspeed,y+vspeed)) {
     //there is a collision
-    if (!place_free(x+round_up(hspeed),y)) {
+    if (!place_free(x+hspeed,y)) {
         //check for collision horizontally first
         if (hspeed>=0) x=floor(x)
         else x=ceil(x)
@@ -689,35 +884,25 @@ if (!place_free(x+round_up(hspeed),y+vspeed)) {
     }
 
     if (!place_free(x+hspeed,y+vspeed)) {
-        //if there's still a collision anyway, find the corner
-        if (instance_place(x+hspeed,y+vspeed,SlopeParent)) {
-            store_x=x
-            store_y=y
-            x+=hspeed
-            y+=vspeed
-            move_outside_solid(180-90*vflip,abs(hspeed)+6)
-            if (!place_free(x,y)) {
-                //couldn't move out, so it's probably a wall
-                //move back down
-                y=store_y
-            } else {
-                //land on slope or blocks moving up
-                grav_step=gravity if (gravity==0) grav_step=0.5*vflip
-                y-=grav_step
-                if (sign(vspeed)==vflip) {
-                    player_land(0)
-                } else {
-                    player_hitceiling()
-                }
-            }
-            x=store_x
-        } else hspeed=0
+        //if there's still a collision anyway, stop moving horizontally
+        hspeed=0
     }
 }
 
 vsplatform=0
 //we subtract gravity because we added it before  
 vspeed-=gravity
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///Zero grav step event
+if (instance_place(x,y,ZeroGravField) and entered) {
+    baseGrav = 0
+    gravity = 0
+    if((onGround or onPlatform) and vspeed != 0) vspeed = 0
+}
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=424
@@ -750,6 +935,52 @@ speed+=friction
 lib_id=1
 action_id=424
 */
+#define Step_1
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///Zero grav begin step
+if (instance_place(x,y,ZeroGravField) and !entered) {
+    entered = true
+    ho = hspeed
+}
+if (instance_place(x,y,ZeroGravField) and entered) {
+    if (place_meeting(x,y,Block) and !position_meeting(x,y+(16*vflip),Block)) {
+        y += 1*vflip
+        hspeed = ho
+    }
+    // Potential fix, may cause other bugs
+    if (place_meeting(x,y+vflip,Block)) and (!onGround) {
+        onGround=true
+    }
+}
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///Update trail
+if (!frozen) {
+    for (i = trailLength; i >= 0; i-=1) {
+        if (i == 0) {
+            xarray[i] = x;
+            yarray[i] = y;
+            imageindexarray[i] = image_index-0.5;
+            spriteindexarray[i] = sprite_index;
+            facingarray[i] = facing;
+            vfliparray[i] = vflip;
+        } else {
+            xarray[i] = xarray[i-1];
+            yarray[i] = yarray[i-1];
+            imageindexarray[i] = imageindexarray[i-1];
+            spriteindexarray[i] = spriteindexarray[i-1];
+            facingarray[i] = facingarray[i-1];
+            vfliparray[i] = vfliparray[i-1];
+        }
+    }
+}
 #define Step_2
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -764,18 +995,6 @@ arg2=0
 lib_id=1
 action_id=422
 */
-/*"/*'/**//* YYD ACTION
-lib_id=1
-action_id=603
-applies_to=self
-*/
-///nekoron water bug
-
-if (key_jump(vi_pressed)) if (instance_place(x,y+1*vflip,NekoronAir) && !onGround) {
-    vspeed=-jump2*vflip
-    repeat (choose(1,2,3)) sound_play_auto("sndDJump")
-    image_index=0
-}
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
@@ -817,10 +1036,43 @@ lib_id=1
 action_id=603
 applies_to=self
 */
+///right side of screen check
+if (dotkid) {
+    if (Player.x >= 800 and !position_meeting(799,Player.y,Player)) kill_player()
+} else {
+    if (Player.x > 800 and !position_meeting(799,Player.y,Player)) kill_player()
+}
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
 ///update sprite
 script_execute(global.player_skin,"step")
 
 player_update_sprite()
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+/// airtime fix
+
+if (onGround) {
+    if (place_free(x,y+vflip+vspeed) && !instance_place(x,y+4*vflip+vspeed,Platform) && !coyoteTime) {
+        onGround=false
+    }
+}
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///Zero grav end step
+if (!instance_place(x,y,ZeroGravField) and entered) {
+    entered = false
+    baseGrav = baseGravDefault
+}
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=424
@@ -855,9 +1107,9 @@ applies_to=self
 */
 ///buggy walljump sound
 
-if (walljump!=0) {
+/*if (walljump!=0) {
     repeat (2) {
-        sound_play_auto("sndJump")
+        sound_play_slomo("sndJump")
     }
     walljump=approach(walljump,0,1)
 }
@@ -869,6 +1121,16 @@ applies_to=self
 ///check autosave
 
 autosave_do()
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+if (walljump!=0) {
+    if (walljump==1) sound_play_slomo("sndWallJump")
+    else if (walljump<1) sound_play_slomo("sndDJump")
+    walljump=approach(walljump,0,1)
+}
 #define Collision_Platform
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -916,8 +1178,10 @@ if (!dead) {
         ytop=bbox_bottom+1
         y=oy
         
-        var snap_var; snap_var=other.snap_type
-        if (snap_var==noone) snap_var=global.platform_snap_type
+        //change snap type for CustomSnap platforms
+        var snap_var;
+        if (other.object_index==CustomSnap) snap_var=other.snap_type
+        else snap_var=global.platform_snap_type
         
         //check platform snap type
         if (check_plat_snap(1,snap_var)) {
@@ -931,7 +1195,7 @@ if (!dead) {
                     } else y=oy
                 } else {
                     //land on it
-                    vspeed=max(0,other.vspeed/dt/global.slomo)
+                    vspeed=max(0,other.vspeed/dt/slomo)
                     player_land(1)
                     with (other) event_trigger(tr_platland)   
                 }
@@ -954,8 +1218,10 @@ if (!dead) {
         ytop=bbox_top
         y=oy
         
-        var snap_var; snap_var=other.snap_type
-        if (snap_var==noone) snap_var=global.platform_snap_type
+        //change snap type for CustomSnap platforms
+        var snap_var;
+        if (other.object_index==CustomSnap) snap_var=other.snap_type
+        else snap_var=global.platform_snap_type
         
         //check platform snap type
         if (check_plat_snap(-1,snap_var)) {
@@ -969,7 +1235,7 @@ if (!dead) {
                     } else y=oy
                 } else {
                     //land on it
-                    vspeed=min(0,other.vspeed/dt/global.slomo)
+                    vspeed=min(0,other.vspeed/dt/slomo)
                     player_land(1)
                     with (other) event_trigger(tr_platland)   
                 }
@@ -996,43 +1262,27 @@ if (instance_place(x,y,ScreenWrap)) {
     if (hspeed<0 && x<0)           {if (!move_player(x+room_width+marginh,y ,1)) x-=hspeed}
     if (vspeed<0 && y<0)           {if (!move_player(x,y+room_height+marginv,1)) y-=vspeed}
 } else {
-    if (hspeed>0 && x>room_width)
-    or (vspeed>0 && y>room_height)
-    or (hspeed<0 && x<0)
-    or (vspeed<0 && y<0) {
-        coll=instance_place(x,y,SectionWarp)
-        if (coll) {
-            with (coll) {
-                global.sectionwarp=true
-                global.warpfromx=x
-                global.warpfromy=y
-                room_goto(roomTo)
-            }
-        } else {
-            coll=instance_place(x,y,OutsideWarp)
-            if (coll) {
-                with (coll) {
-                    if (warpCoord[0]==noone && warpCoord[1]==noone && roomTo=room) {
-                        //warp isn't set up correctly
-                        instance_destroy()
-                    } else if (roomTo!=room) {
-                        //warp!
-                        input_clear()
-                        if (warpCoord[0]==noone && warpCoord[1]==noone) {
-                            warp_to(roomTo)
-                        } else {
-                            warp_to(roomTo,warpCoord[0],warpCoord[1])
-                        }
-                        if (autosave) autosave_asap()
-                        global.warp_id=warpid
-                    }
+    coll=instance_place(x,y,OutsideWarp)
+    if (coll) {
+        with (coll) {
+            if (warpCoord[0]==noone && warpCoord[1]==noone && roomTo=room) {
+                //warp isn't set up correctly
+                instance_destroy()
+            } else if (roomTo!=room) {
+                //warp!
+                input_clear()
+                if (autosave) autosave_asap()
+                if (warpCoord[0]==noone && warpCoord[1]==noone) {
+                    warp_to(roomTo)
+                } else {
+                    warp_to(roomTo,warpCoord[0],warpCoord[1])
                 }
-            } else {
-                //death.
-                if not (!global.die_outside_top && y<0 && x=median(0,x,room_width)) 
-                    if (global.die_outside_room || instance_place(x,y,DieOutside)) kill_player()
+                global.warp_id=warpid
             }
         }
+    } else {
+        //death.
+        if (global.die_outside_room || instance_place(x,y,DieOutside)) kill_player()
     }
 }
 #define Other_4
@@ -1052,6 +1302,10 @@ if (dotkid) {
     sprite_index=sprDotKid
     mask_index=-1
 }
+
+//activate celeste cape & reset it if you change the variable state
+if (global.celeste_cape && global.player_skin==global.player_default_skin) change_skin(skin_celeste_cape)
+else if (!global.celeste_cape && global.player_skin==skin_celeste_cape) change_skin(global.player_default_skin)
 
 //fix sprite for first frame
 script_execute(global.player_skin,"step")
@@ -1118,6 +1372,18 @@ if (!dead) {
         draw_sprite_ext_fixed(mask_index,0,floor(x),floor(y)+(vflip==-1),image_xscale,image_yscale,image_angle,image_blend,image_alpha*0.5)
     }
 }
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+///draw trail
+
+if (!dead and (frozen or trailView)) {
+    for (i=0; i<trailLength; i+=1) {
+        draw_sprite_ext(spriteindexarray[i],imageindexarray[i],xarray[i],yarray[i],facingarray[i],vfliparray[i],image_angle,c_white,trailAlpha)
+    }
+}
 #define Trigger_Draw End
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -1125,7 +1391,7 @@ action_id=603
 applies_to=self
 */
 ///draw slow motion effect
-if (global.slomo<1) {
+if (slomo<1) {
     draw_set_alpha(0.025+0.025*sin(global.increment/2))
     draw_rectangle_color(0,0,room_width,room_height,0,0,0,0,0)
     draw_set_alpha(1)

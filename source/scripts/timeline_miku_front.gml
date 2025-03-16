@@ -101,7 +101,7 @@ if (argument0=="step") {
     }
     if (wait_timer(50)) {
         sound_stop_music()
-        sound_play_auto("sndBlockChange")
+        sound_play("sndBlockChange")
         instance_destroy()
     }
 }

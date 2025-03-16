@@ -1,2 +1,2 @@
-constant=tr_draw_end
+constant=ev_draw_end
 kind=2

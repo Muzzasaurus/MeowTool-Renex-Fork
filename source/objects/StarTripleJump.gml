@@ -15,12 +15,15 @@ action_id=603
 applies_to=self
 */
 if other.maxjumps != 3 {
-    other.maxjumps = 3
-    effect = true
-    xs = 1
-    ys = 1
-    aa = 1
-    sound_play_auto("sndGainStar")
+    if (!other.dead) {
+        other.maxjumps = 3
+        if (other.djump > 3) other.djump = 3
+        effect = true
+        xs = 1
+        ys = 1
+        aa = 1
+        sound_play("sndGainStar")
+    }
 }
 #define Draw_0
 /*"/*'/**//* YYD ACTION

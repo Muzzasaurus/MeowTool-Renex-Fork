@@ -57,14 +57,14 @@ if (global.debug_overlay) {
 if (message) {
     draw_set_font(fntFileSmall)
     draw_set_alpha(min(1,message/100))
-    draw_text_outline(40,40,messagetext,$ffff)
+    draw_text_outline(40,40,messagetext,$ffffff)
     draw_set_alpha(1)
 }
 if (message2) {
     draw_set_font(fntFileSmall)
     draw_set_halign(2)
     draw_set_alpha(min(1,message2/100))
-    draw_text_outline(dw-40,40,message2text,$ffff)
+    draw_text_outline(dw-40,40,message2text,$ffffff)
     draw_set_halign(0)
     draw_set_alpha(1)
 }

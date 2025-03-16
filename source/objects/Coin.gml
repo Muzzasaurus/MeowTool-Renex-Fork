@@ -12,5 +12,5 @@ action_id=603
 applies_to=self
 */
 persist_hash(1)
-sound_play_auto("sndCoin")
+sound_play("sndCoin")
 instance_destroy()

@@ -33,7 +33,7 @@ if (!sound_isplaying(song[0])
 }
 
 if (!slowing) {
-    frames+=global.slomo
+    frames+=1
     musframes=sound_get_pos(song[cursong])*lenframe
 
     if (abs(musframes-frames)>5) {

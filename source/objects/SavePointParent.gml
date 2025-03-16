@@ -44,12 +44,12 @@ if (save) {
     
     image_index=1
     image_speed=1/room_speed
-    sound_play_auto("sndSave")
+    //sound_play("sndSave")
     
     showtime=savedata("showtime "+name)
     if (showtime) time_display=format_time(showtime)
     else {
-        showtime=savedata("time")
+        showtime=World.time
         savedata("showtime "+name,showtime)
         time_display=format_time(showtime)
     }

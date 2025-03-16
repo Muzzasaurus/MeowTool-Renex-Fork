@@ -17,29 +17,14 @@ if (gm82core_version<160) {
     exit
 }
 
-is_in_temp=string_pos("\appdata\local\temp\",string_lower(working_directory))
-
-no_data=false
 if (!directory_exists("data")) {
     set_working_directory(directory_previous(working_directory))
     if (!directory_exists("data")) {
-        no_data=true
-    }
-}
-
-if (is_in_temp) {
-    if (no_data) {
         show_error(
-            "The game seems to have been launched from a 7z, zip or rar compressed archive. Please extract the archive and try again.",
+            "Data folder not found.",
             true
         )
-        exit
     }
-} else if (no_data) {
-    show_error(
-        "Data folder not found. If you extracted the game from a compressed archive like 7z, zip or rar, make sure you extract all the files.",
-        true
-    )
 }
 
 io_set_roomend_clear(0)
@@ -73,15 +58,21 @@ message2=0 message2text=""
 maxalpha=0
 maxclick=0
 
-maxcolor1=window_get_caption_color()
-if (color_get_luminance(maxcolor1)>128) maxcolor2=0
-else maxcolor2=$ffffff
+if (get_windows_version()==5) {
+    //windows xp colors
+    maxcolor1=$e55500
+    maxcolor2=$ffffff
+} else {
+    //get win10 window colors
+    maxcolor1=window_get_caption_color()
+    if (color_get_luminance(maxcolor1)>128) maxcolor2=0
+    else maxcolor2=$ffffff
+}
 
 global.viewangle=0
 global.pause=false
 global.music=""
 global.music_instance=noone
-global.death_music_id=noone
 
 global.perform_autosave=false
 global.room_started=false
@@ -89,8 +80,6 @@ global.gen_thumb=false
 global.gen_thumb_cachebg=noone
 
 global.warp_id=""
-global.lastroom=noone
-global.sectionwarp=false
 global.no_pause=0
 global.no_restart=0
 global.no_quit=0
@@ -98,9 +87,7 @@ global.itemcount=0
 
 global.increment=0
 
-global.slomo=1
-global.slomoto=1
-global.slomof=0
+global.game_title_addition=""
 
 global.keylist=ds_map_create()
 
@@ -129,6 +116,7 @@ mousey=0
 activation_timer=0
 
 globalvar view_xcenter,view_ycenter;
+globalvar mouse_xfixed;
 globalvar cpu_usage,ram_usage;
 
 ram_timer=0
@@ -140,8 +128,8 @@ global.difficulty_default=0
 engine_settings()
 
 //i'm not gonna just LET you do that
-if (global.default_smoothing_rate<1) global.default_smoothing_rate=1
-global.default_smoothing_rate=round(global.default_smoothing_rate)
+if (global.smoothing_rate<1) global.smoothing_rate=1
+global.smoothing_rate=round(global.smoothing_rate)
 
 if (global.num_difficulties==1) {
     //only one difficulty, copy it to the single difficulty used
@@ -149,6 +137,7 @@ if (global.num_difficulties==1) {
     global.is_impossible[global.single_difficulty]=global.is_impossible[0]
 }
 
+global.optimize_solids=median(0,global.optimize_solids,8)
 global.break_sfx=pick(median(0,global.break_sound_effect,2),"sndBlockBreak","sndBlockBreakYuuutu","sndBlockBreakYosniper")
 
 set_application_title(global.game_title)
@@ -180,7 +169,7 @@ custom_options()
 savedata_init()
 
 //detect that this is being ran from game maker and set the test run variable
-global.test_run=global.always_test_mode
+/*global.test_run=global.always_test_mode
 if (!global.release_mode) if (program_directory!=working_directory && string_pos("\AppData\Local\Temp\gm_ttt_",program_directory)) {
     var key;key="SOFTWARE\Game Maker\Version 8.2\Preferences\"
     var name;name=filename_change_ext(filename_name(parameter_string(0)),"")
@@ -190,8 +179,8 @@ if (!global.release_mode) if (program_directory!=working_directory && string_pos
             break
         }
     }
-}
-
+}*/
+global.test_run=false
 if (global.test_run) {
     live_roomeditor_start()
     live_roomeditor_add_obj_exclusion(PlayerStart)
@@ -202,8 +191,6 @@ custom_init()
 shaders_init()
 
 savedata_init()
-
-save_scheduled=false
 
 global.debug_overlay=(global.test_run && debug_mode)
 global.debug_god=false
@@ -217,7 +204,8 @@ profiler_setup()
 //graphics setup
 envelope_init()
 display_set_gui_maximise(-1,-1)
-instance_create(0,0,Ortho)
+//MuzzaSillyBugfix
+instance_create(-32,0,Ortho)
 
 for (i=room_first;i!=-1;i=room_next(i)) {
     room_set_view_enabled(i,1)
@@ -251,8 +239,9 @@ add_gizmo(Trap)
 custom_traps()
 
 //let's go away
-if (settings("volcheck")) {
+/*if (settings("volcheck")) {
     room_goto_next()
 } else {
     instance_create(0,0,VolCheck)
-}
+}*/
+room_goto_next()

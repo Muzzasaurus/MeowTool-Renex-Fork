@@ -1,2 +1,2 @@
-constant=tr_draw_gui
+constant=ev_draw_gui
 kind=2

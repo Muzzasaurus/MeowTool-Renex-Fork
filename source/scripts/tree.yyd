@@ -5,19 +5,15 @@
 		|opt_template
 		|opt_music_volume
 		|opt_sound_volume
-		|opt_sound_mode
 		|opt_screen_mode
 		|opt_screen_scale
 		|opt_fullscreen_filter
-		|opt_blood_collision
 		|opt_blood_amount
 		|opt_animation
 		|opt_screenshake
 		|opt_savevalign
 		|opt_caption
 		|opt_left_right
-		|opt_celeste
-		|opt_pausesounds
 		|opt_rebind_keyboard
 		|opt_rebind_joystick
 	+game keys
@@ -36,18 +32,15 @@
 		|key_pause
 		|key_skip
 		|key_die
+		|key_edit
 	|custom_init
 	|custom_save
 	|custom_load
 	|custom_traps
 	|custom_language
 	|custom_sound_properties
-	|custom_music_effects
 	|custom_region_activation
 	|custom_window_border
-	|custom_instance_activation
-	|gm82room_jtool_table
-	|custom_postprocessing
 +saving
 	|savedata_init
 	|settings_default
@@ -81,7 +74,6 @@
 		|read_objsave
 	|generate_save_thumbnail
 	|persist_hash
-	|savedata_schedule_write
 +system
 	+util
 		|format_time
@@ -94,8 +86,6 @@
 		|filename_valid
 		|current_date_filename
 		|make_persistent
-		|create_groups_recurse
-		|round_up
 	+input
 		+joysticks
 			|joy_deadzone
@@ -118,12 +108,9 @@
 		|unlock_controls
 		|system_hotkeys
 		|debug_keys
-		|mouse_room_x
-		|mouse_room_y
 	+rendering
 		|envelope_init
 		|envelope_prepare
-		|envelope_begin_frame
 		|envelope_compose
 		|update_fullscreen
 		|take_screenshot
@@ -134,6 +121,7 @@
 		|draw_sign_text
 		|draw_text_outline
 		|draw_sprite_hueshift
+		|draw_before_backgrounds
 	+GUI
 		|display_set_gui_size
 		|display_set_gui_maximise
@@ -145,19 +133,26 @@
 	+misc lists
 		|list_nonstick
 		|list_obstructions
-	+deactivation
-		|update_activation
-		|instance_deactivate_all_safe
-		|instance_activate_all_safe
-		|instance_activate_around
-	+autotiler
-		|autotile_type
-		|autotile
-		|autotile_corner
-		|autotile_ext_place
+		|gm82room_jtool_table
+	+world events
+		|event_game_start
+		|event_room_start
+		|event_world_earlystep
+		|event_world_step
+		|event_world_endstep
+		|event_world_drawend
+		|event_debug_gui
+		|event_draw_gui
+		|event_room_end
+		|event_game_end
+		|event_camera_update
 	|add_difficulty
 	|add_gizmo
 	|update_caption_deathtime
+	|cement
+	|instance_deactivate_all_safe
+	|update_activation
+	|instance_activate_around
 	|add_string
 	|lang
 	|collect_items
@@ -167,26 +162,15 @@
 	|show_message_right
 	|move_player_object
 	|profiler_setup
+	|activate_objects
 	|room_find
+	|autotile_type
+	|autotile
+	|instance_activate_all_safe
 	|construct
 	|trigger_broadcast
-	|addtrigger_vars
+	|update_triggers
 	|draw_window_caption
-	|set_game_speed
-	|check_engine_parenting
-	|update_addtriggers
-+world events
-	|event_game_start
-	|event_room_start
-	|event_room_end
-	|event_world_earlystep
-	|event_world_step
-	|event_world_endstep
-	|event_world_drawend
-	|event_debug_gui
-	|event_draw_gui
-	|event_game_end
-	|event_camera_update
 +player
 	|player_jump
 	|player_capjump
@@ -205,6 +189,7 @@
 	|kill_player
 	|move_player
 	|flip_player
+	|flip_no_reset
 	|emit_blood
 	|emit_prop_blood
 	|warp_to
@@ -213,9 +198,6 @@
 	|unfreeze_player
 	|try_unstuck
 	|player_swap_keys
-	|vine_check_left
-	|vine_check_right
-	|correct_player_mask
 +keypick
 	|key_clear
 	|key_add
@@ -237,7 +219,6 @@
 		|camera_zoom
 		|camera_angle
 		|camera_smooth
-		|camera_smooth_rate
 		|camera_set
 		|camera_borders
 		|camera_set_gridsize
@@ -248,7 +229,6 @@
 		|camera_get_y
 		|camera_get_zoom
 		|camera_get_smooth
-		|camera_get_smooth_rate
 		|camera_get_borders
 	|camera_shake
 	|camera_apply
@@ -257,20 +237,20 @@
 +skins
 	|change_skin
 	|skin_default
+	|skin_celeste_cape
 	|skin_dotkid
-	|skin_telekid
+	|skin_shootkid
 	|skin_vvvvvv
 +weapons
 	|change_weapon
 	|weapon_default
 	|weapon_8dir
-	|weapon_telekid
+	|weapon_shootkid
 +sound
 	|load_sounds
-	|mfx_add
 	|sound_play_music
 	|sound_fade_music
-	|sound_play_auto
+	|sound_play_slomo
 	|sound_set_starting_volume
 	|sound_set_loop_points
 	|sound_play_option
@@ -282,12 +262,9 @@
 	|sound_play_synced
 +bonus/utility
 	|draw_cherry
-	|ease
+	|ease_value
 	|simple_collision
 	|good_bounce
-	|screen_fade
-	|create_collision_groups
-	|example_trap_script
 +avoidance/miku
 	|timeline_miku
 	|timeline_miku_front
@@ -318,17 +295,28 @@
 	|shader_tint
 	|shader_rainbow
 	|shader_snow
-+dialog
-	+dialog engine
-		|de_begin
-		|de_dialog
-		|de_choice
-		|de_runonce
-		|de_end
-		|de_save
-		|de_load
-		|de_active
-	|de_settings
-	|de_documentation
-	|textbox_default
-	|dialog_example
++save/load map
+	|saveMap
+	|saveMapBackup
+	|loadMap
+	|loadDirect
+	|importJmap
++skins
+	|loadSkins
+	|checkSkinsFolder
+	|updateSprite
+	|changeSkin
++misc functions
+	|curInside
+	|clearMap
+	|resetRoom
+	|editMode
+	|buildMode
+	|is_letter
+|initialiseSelectables
+|objInPalette
+|findWord
+|objCreateWithString
+|objImportWithString
+|jtoolIDtoObject
+|objCreateWithStringBackup

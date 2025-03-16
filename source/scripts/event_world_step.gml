@@ -36,7 +36,7 @@ if (music_fade<1) {
 //music slow
 if (slowing) {
     slowfrom-=0.01
-    if (!instance_exists(MusicSync)) sound_kind_pitch(1,slowfrom*global.slomo*room_speed/global.game_speed)
+    if (!instance_exists(MusicSync)) sound_kind_pitch(1,slowfrom)
     else MusicSync.slowing=1
     if (slowfrom<=0) {
         slowing=0
@@ -48,10 +48,8 @@ if (slowing) {
 
 if (is_ingame() && room!=global.difficulty_room) {
     //advance game time
-    if not (Player.dead or global.pause)
-    and not (instance_exists(TimerFreeze))
-    and not (global.pause_time_after_clear and savedatap("clear")) {
-        time=savedatap("time")+global.game_speed/room_speed
+    if (!Player.dead && !global.pause && !instance_exists(TimerFreeze)) {
+        time=savedatap("time")+50/room_speed
         savedatap("time",time)
     }
 
@@ -61,6 +59,13 @@ if (is_ingame() && room!=global.difficulty_room) {
 //debug keys
 if (global.test_run) {
     debug_keys()
+}
+if (keyboard_check_pressed(vk_f3)) {
+    if (instance_exists(global.profiler_manager)) {
+        instance_destroy_id(global.profiler_manager)
+    } else {
+        instance_create(0,0,global.profiler_manager)
+    }
 }
 
 system_hotkeys()

@@ -1,4 +1,4 @@
-sprite=sprTrap
+sprite=sprSpikeTrap
 visible=1
 solid=0
 persistent=0

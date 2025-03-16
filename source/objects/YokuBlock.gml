@@ -19,7 +19,7 @@ applies_to=self
 */
 if (!visible) {
     if (distance_to_object(Player)<2) {
-        sound_play_auto("sndBlockChange")
+        sound_play_slomo("sndBlockChange")
         visible=1
         image_speed=-0.5
     }

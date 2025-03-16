@@ -11,20 +11,6 @@ if (camera_l!=memcaml || camera_t!=memcamt || activation_timer>=room_speed*0.5) 
 memcaml=camera_l
 memcamt=camera_t
 
-//slow motion updates
-if (!slowing) {
-    global.slomo=approach(global.slomo,global.slomoto,global.slomof)
-    sound_kind_pitch(0,global.slomo*room_speed/global.game_speed)
-    sound_kind_pitch(1,global.slomo*room_speed/global.game_speed)
-    sound_kind_pitch(2,global.slomo*room_speed/global.game_speed)
-    sound_kind_pitch(3,global.slomo*room_speed/global.game_speed)
-}
-
-if (is_ingame())
-    dt=(50*global.slomo)/global.game_speed
-else
-    dt=1
-
 //blood updates
 stepcount+=50/room_speed
 if (stepcount>=1) {
@@ -65,7 +51,13 @@ if (settings("fullscreen")) {
     else curalpha=max(maxalpha,curalpha-0.05*dt)
     if (curalpha>0) window_set_cursor(cr_default)
     else window_set_cursor(cr_none)
+
+    //fix mouse_x
+    var s;s=min(global.dw/global.width,global.dh/global.height)
+    mouse_xfixed=view_xview+((display_mouse_get_x()-global.woffset)/s)
 } else {
+    //keep mouse_x on windowed
+    mouse_xfixed=mouse_x
     curalpha=1
 }
 
@@ -79,6 +71,7 @@ if (maxclick!=0) {
         if (maxclick) {
             settings("fullscreen",!settings("fullscreen"))
             update_fullscreen()
+            window_delayed_center()
         }
         maxclick=0
     }

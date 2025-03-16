@@ -5,5 +5,5 @@ action_id=603
 applies_to=self
 */
 event_inherited()
-sound_play_auto("sndCoin")
+sound_play("sndCoin")
 instance_destroy()

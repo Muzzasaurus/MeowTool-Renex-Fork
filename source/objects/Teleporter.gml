@@ -16,7 +16,7 @@ applies_to=self
 */
 if (warpCoord[0]!=noone && warpCoord[1]!=noone && !other.dead) {
     move_player(warpCoord[0],warpCoord[1],0)
-    with (other) sound_play_auto("sndTeleport")
+    sound_play_slomo("sndTeleport")
 }
 #define Other_4
 /*"/*'/**//* YYD ACTION

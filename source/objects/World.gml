@@ -25,7 +25,7 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-///this is delayed to prevent a bug with instance list reordering
+///this is delayed to prevent a bug with istance list reordering
 global.room_started=true
 update_activation()
 #define Alarm_2
@@ -37,7 +37,7 @@ applies_to=self
 ///delayed buffer resize
 update_fullscreen()
 window_resize_buffer(global.ww,global.wh,0,0)
-alarm[3]=5
+alarm[3]=1
 #define Alarm_3
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -46,14 +46,6 @@ applies_to=self
 */
 ///delayed window center
 window_center()
-#define Alarm_4
-/*"/*'/**//* YYD ACTION
-lib_id=1
-action_id=603
-applies_to=self
-*/
-///save scheduling
-if (save_scheduled) savedata_write()
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1

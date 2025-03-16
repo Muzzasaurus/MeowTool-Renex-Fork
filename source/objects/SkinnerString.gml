@@ -11,12 +11,6 @@ fruit = noone
 
 blend = $ffffff
 alpha = 1
-
-vine_left = noone
-vine_right = noone
-
-grav_flip = noone
-grav_normal = noone
 #define Other_4
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -45,10 +39,6 @@ Minispike names must start with:
 //field spike: string
 //field mini_spike: string
 //field fruit: sprite
-//field vine_left: sprite
-//field vine_right: sprite
-//field grav_flip: sprite
-//field grav_normal: sprite
 //field blend: color
 //field alpha: number(0,1)
 
@@ -61,15 +51,19 @@ if (spike!="") {
         s_u=sprSpikeUp"+spike+"
     ")
     with (SpikeD) {sprite_index=other.s_d image_blend=other.blend image_alpha=other.alpha}
+    with (SpikeTrapD) {sprite_index=other.s_d image_blend=other.blend image_alpha=other.alpha}
 
 
     with (SpikeL) {sprite_index=other.s_l image_blend=other.blend image_alpha=other.alpha}
+    with (SpikeTrapL) {sprite_index=other.s_l image_blend=other.blend image_alpha=other.alpha}
 
 
     with (SpikeR) {sprite_index=other.s_r image_blend=other.blend image_alpha=other.alpha}
+    with (SpikeTrapR) {sprite_index=other.s_r image_blend=other.blend image_alpha=other.alpha}
 
 
     with (SpikeU) {sprite_index=other.s_u image_blend=other.blend image_alpha=other.alpha}
+    with (SpikeTrapU) {sprite_index=other.s_u image_blend=other.blend image_alpha=other.alpha}
 }
 
 // minispikes
@@ -98,20 +92,5 @@ if (mini_spike!="") {
 // fruit
 if (fruit!=noone) {
     with (Cherry) {sprite_index=other.fruit image_blend=other.blend image_alpha=other.alpha}
-}
-
-//vines
-if (vine_left!=noone) {
-    with (WallJumpL) {sprite_index=other.vine_left image_blend=other.blend image_alpha=other.alpha}
-}
-if (vine_right!=noone) {
-    with (WallJumpR) {sprite_index=other.vine_right image_blend=other.blend image_alpha=other.alpha}
-}
-
-//grav flippers
-if (grav_flip!=noone) {
-    with (GravFlip) {sprite_index=other.grav_flip image_blend=other.blend image_alpha=other.alpha}
-}
-if (grav_normal!=noone) {
-    with (GravNormal) {sprite_index=other.grav_normal image_blend=other.blend image_alpha=other.alpha}
+    with (FruitTrap) {sprite_index=other.fruit image_blend=other.blend image_alpha=other.alpha}
 }

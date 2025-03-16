@@ -17,7 +17,7 @@ instance_deactivate_all_safe(false)
 memspd=room_speed
 alarm[0]=room_speed
 
-if (settings("pause sounds")) sound_pause_all()
+if (global.pause_sound_on_game_pause) sound_pause_all()
 
 //options
 xdraw=60
@@ -67,7 +67,7 @@ background_delete(bg)
 input_clear()
 visible=0
 
-if (settings("pause sounds")) sound_resume_all()
+if (global.pause_sound_on_game_pause) sound_resume_all()
 
 room_speed=memspd
 
@@ -163,22 +163,8 @@ if (sel==-1) {
     draw_sprite_ext(sprite,floor(image_index),xcursor,ycursor,1,1,angle,$ffffff,1)
 }
 
-var batt_info,batt_status;
-
-batt_info=""
-batt_status=get_battery_status()
-if (batt_status) {
-    batt_info=lang("battery")+string(get_battery_level())
-    if (batt_status==2) batt_info+="("+lang("battery charge")+")"
-}
-
 draw_set_valign(2)
-    draw_text(40,global.height-36,
-        lang("deaths")+": "+string(savedata("deaths"))+"#"+
-        lang("time")+": "+format_time(savedata("time"))+"#"+
-        lang("systime")+": "+date_time_string(date_current_time())+"#"+
-        batt_info
-    )
+    draw_text(40,global.height-36,lang("deaths")+": "+string(savedata("deaths"))+"#"+lang("time")+": "+format_time(savedata("time")))
 draw_set_valign(0)
 
 draw_set_color($ffffff)

@@ -42,7 +42,7 @@ v=macro_updown()
 
 if (v!=0) {
     if (volumetimer>volumedelay || !(volumetimer mod volumefpi)) {
-        settings("sfxvol",saturate(settings("sfxvol")-v*0.01))
+        settings("sfxvol",saturate(settings("sfxvol")+v*0.01))
     }
     volumetimer+=1
 } else volumetimer=0
@@ -63,8 +63,7 @@ if (fade) {
     alpha=min(1.5,alpha+1/room_speed)
     if (alpha==1.5) {
         settings("musvol",settings("sfxvol"))
-        instance_create(0,0,CopySettings)
-        instance_destroy()
+        room_goto_next()
     }
 }
 #define Other_4
@@ -84,9 +83,9 @@ draw_clear(0)
 draw_set_font(fntFileBig)
 draw_set_valign(2)
 draw_set_halign(2)
-draw_text(global.width-16,global.height-16,lang("volcheck")+"["+key_jump(vi_keyname)+"]"+lang("volcheck2"))
+draw_text(global.width-16,global.height-16,lang("volcheck")+"["+key_jump(vi_name)+"]"+lang("volcheck2"))
 draw_set_halign(0)
-draw_text(16,global.height-16,lang("volcheckvol")+": "+string(round(settings("sfxvol")*100))+"%#"+lang("volcheck3")+"["+key_up(vi_keyname)+"]"+lang("volcheck4")+"["+key_down(vi_keyname)+"]")
+draw_text(16,global.height-16,lang("volcheckvol")+": "+string(round(settings("sfxvol")*100))+"%#"+lang("volcheck3")+"["+key_up(vi_name)+"]"+lang("volcheck4")+"["+key_down(vi_name)+"]")
 draw_set_valign(0)
 
 if (fade) draw_rect(0,0,global.width,global.height,background_color,alpha)

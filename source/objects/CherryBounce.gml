@@ -4,11 +4,8 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-event_inherited()
 image_speed=0
 image_index=1
-
-destroy_outside=1
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -22,7 +19,7 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-if (destroy_outside) instance_destroy()
+instance_destroy()
 #define Other_4
 /*"/*'/**//* YYD ACTION
 lib_id=1

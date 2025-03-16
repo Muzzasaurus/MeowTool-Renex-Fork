@@ -15,7 +15,6 @@ if (global.blood_clusters) {
         i.direction=irandom(35)*10
         i.speed=random(8)*dt
         i.gravity=(0.2+random(0.2))*dt*dt
-        i.setting=setting
         if (yes) {
             i.vflip=Player.vflip
             i.gravity*=sign(Player.baseGrav*Player.vflip)
@@ -32,7 +31,6 @@ if (global.blood_clusters) {
         i.direction=irandom(35)*10
         i.speed=random(8)*dt
         i.gravity=(0.2+random(0.2))*dt*dt
-        i.setting=setting
         if (yes) {
             i.vflip=Player.vflip
             i.gravity*=sign(Player.baseGrav*Player.vflip)

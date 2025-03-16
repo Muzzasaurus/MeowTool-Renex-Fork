@@ -38,7 +38,8 @@ applies_to=self
 //field path: path
 //field speed
 //field path_action: enum(path_action_continue,path_action_restart,path_action_reverse,path_action_stop)
-//field path_absolute: false
+//field path_absolute: bool
+//field snap: bool
 //field hspeed
 //field vspeed
 

@@ -15,7 +15,6 @@ applies_to=self
 
 passenger=noone
 active=0
-stay_visible=0
 #define Destroy_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -52,7 +51,7 @@ active=1
 
 lock_controls()
 freeze_player()
-if (!stay_visible) passenger.visible=0
+passenger.visible=0
 #define Trigger_Vehicle Dismount
 /*"/*'/**//* YYD ACTION
 lib_id=1

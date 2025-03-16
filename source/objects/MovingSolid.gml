@@ -1,10 +1,3 @@
-#define Create_0
-/*"/*'/**//* YYD ACTION
-lib_id=1
-action_id=603
-applies_to=self
-*/
-event_beginstep()
 #define Step_1
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -18,31 +11,22 @@ bbox_bottom_old = bbox_bottom;
 
 x_old = x;
 y_old = y;
-
-moved_this_frame=false
 #define Step_2
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
 applies_to=self
 */
-if (moved_this_frame) check_crush()
-#define Trigger_Early End Step
-/*"/*'/**//* YYD ACTION
-lib_id=1
-action_id=603
-applies_to=self
-*/
-var _bbox_left_new, _bbox_top_new, _bbox_right_new, _bbox_bottom_new;
+var _moved, _bbox_left_new, _bbox_top_new, _bbox_right_new, _bbox_bottom_new;
 var _x_new, _y_new, _sprite_new, _xscale_new, _yscale_new, _distance, xx, _carry, y_carry;
 
-moved_this_frame =
+_moved =
     bbox_left != bbox_left_old ||
     bbox_top != bbox_top_old ||
     bbox_right != bbox_right_old ||
     bbox_bottom != bbox_bottom_old;
 
-if moved_this_frame {
+if _moved {
     _bbox_left_new = bbox_left;
     _bbox_top_new = bbox_top;
     _bbox_right_new = bbox_right;
@@ -139,6 +123,10 @@ if moved_this_frame {
     }
 
     solid = true;
+
+
+    check_crush();
+
 
     x = _x_new;
     y = _y_new;

@@ -19,11 +19,11 @@ action_id=603
 applies_to=self
 */
 if (warpToPlayerstart) {
-    if (warpsound!="") sound_play_auto(warpsound)
+    if (warpsound!="") sound_play(warpsound)
     move_player(warpToPlayerstart.x+17,warpToPlayerstart.y+23,0)
     if (global.clear_inputs_on_warp) input_clear()
 } else if (roomTo==room) {
-    sound_play_auto("sndBlockChange")
+    sound_play("sndBlockChange")
     instance_destroy()
 } else {
     collect_items()
@@ -35,7 +35,6 @@ if (warpToPlayerstart) {
     } else {
         warp_to(roomTo,warpCoord[0],warpCoord[1])
     }
-    if (autosave) autosave_asap()
     global.warp_id=warpid
 }
 #define Other_4
@@ -49,12 +48,11 @@ applies_to=self
 //field warpid: string
 //field warpToPlayerstart: instance - (pick a PlayerStart)
 //field warpsound: string
-//field transparent: false
-//field autosave: false
+//field transparent: bool
 
 if (persistent && warpsound!="") {
     //we are coming from a previous room, and we have to play a sound
-    sound_play_auto(warpsound)
+    sound_play(warpsound)
     instance_destroy()
 } else {
     if (warpToPlayerstart)

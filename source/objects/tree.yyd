@@ -1,36 +1,5 @@
 |World
 |Player
-|Bullet
-+Parents
-	|PlayerKiller
-	|PlayerKillerActive
-	|DotKiller
-	|ActiveParent
-	|ActiveIngame
-	|SavePointParent
-	|Trigger
-	|Triggered
-	|TriggerLock
-	|Button
-	|ButtonShoot
-	|Boss
-	|Avoidance
-	|Gizmo
-	|Trap
-	|TrapSave
-	|Item
-	|GlobalItem
-	|DisplayItem
-	|DisplayGlobalItem
-	|ItemBlock
-	|SolidItemBlock
-	|KeyParent
-	|KeyBlockParent
-	|SlopeParent
-	|MovingSolid
-	|SuperVehicle
-	|VandalCherryBase
-	|AnyWater
 +Common Objects
 	+Jtool Gimmicks
 		|WallJumpL
@@ -38,10 +7,10 @@
 		|JumpRefresher
 		|GravFlip
 		|GravNormal
-		|MiniBlock
 	+Saves
 		|SavePointMedium
 		|SavePointHard
+		|SavePointFlip
 		|SavePointVeryHard
 		|AntiSoftlockBlock
 		|AutoSaver
@@ -67,103 +36,25 @@
 			|CherryRainbow
 		|MegaCherry
 		|CherryBounce
-	+Special Blocks
-		|ConveyorLeft
-		|ConveyorRight
-		|PushBlock
-		|LongPushBlock
-		|PushBlockSave
-		|LiftBlock
-		|MoveBlock
-		|YokuBlock
-		|SlipBlock
-		|M9Block
-		|M9Trigger
-		|DingBlock
-		|FakeBlock
-		|BreakBlock
-		|ActualYokuBlock
-		|YokuGroup
-		|YokuSpeedChanger
-		|DemoBlock
-	+Slopes/gates
-		|SlopeTL
-		|SlopeTR
-		|SlopeBL
-		|SlopeBR
-		|SlopeBlock
-		|SlopeCircle
-		|SlopeCrescent
-		|SlopeBeam
-		|FunnySlope
-		|SlopePixel
-		|SlopeWobbly
-		|GateUp
-		|GateRight
-		|GateLeft
-		|GateDown
-	+Waters
-		|Water1
-		|Water2
-		|Water3
-		|CatharsisWater
-		|NekoronWater
-		|NekoronAir
-		|PlatformWater
-		|GuyWater
-		|ShapeWater
-	+Misc. Killers
-		|LeekUp
-		|LeekLeft
-		|LeekRight
-		|LeekDown
-		|Fig
-		|Wasp
-	+Difficulty Objects
-		+Medium (destroys on Hard/VH)
-			|MediumBlock
-			|SpikeMediumD
-			|SpikeMediumL
-			|SpikeMediumR
-			|SpikeMediumU
-			|MiniSpikeMediumD
-			|MiniSpikeMediumL
-			|MiniSpikeMediumR
-			|MiniSpikeMediumU
-		+Hard (destroys on Med)
-			|HardBlock
-			|SpikeHardD
-			|SpikeHardL
-			|SpikeHardR
-			|SpikeHardU
-			|MiniSpikeHardD
-			|MiniSpikeHardL
-			|MiniSpikeHardR
-			|MiniSpikeHardU
-		+VHard (destroys on Med/Hard)
-			|VHardBlock
-			|SpikeVHardD
-			|SpikeVHardL
-			|SpikeVHardR
-			|SpikeVHardU
-			|MiniSpikeVHardD
-			|MiniSpikeVHardL
-			|MiniSpikeVHardR
-			|MiniSpikeVHardU
+		|CherryCircle
+	|PlayerStart
+	|Block
+	|MiniBlock
+	|Platform
+	|SidewaysPlatform
+	|CustomSnap
+	|SpikeD
+	|SpikeL
+	|SpikeR
+	|SpikeU
 	|MiniSpikeDown
 	|MiniSpikeLeft
 	|MiniSpikeRight
 	|MiniSpikeUp
-	|KillBlock
-	|Ladder
-	|LadderSide
-	|Spinner
-	|Signpost
+	|MusicPlayer
 	|Warp
 	|FadeWarp
-	|WarpToHub
-	|DifficultyWarp
-	|SectionWarp
+	|OutsideWarp
 +Triggers/Traps
 	+Triggers
 		|Trigger1
@@ -217,11 +108,15 @@
 	|TrapStop
 	|TriggerGroup
 	|TrapRedirect
-	|TrapDestroy
 	|AddTrigger
 	|TriggerFree
 	|TriggeredFree
 	|TriggerInstance
+	|SpikeTrapD
+	|SpikeTrapL
+	|SpikeTrapR
+	|SpikeTrapU
+	|FruitTrap
 +Gimmicks
 	+White Dot
 		|WhiteDotEnable
@@ -235,6 +130,10 @@
 		|DotkidEnable
 		|DotkidDisable
 		|DotkidKiller
+	+Shootkid
+		|ShootkidEnable
+		|ShootkidDisable
+		|ShootKid
 	+Keypick
 		|KeyDraw
 		|KeyWhite
@@ -260,14 +159,11 @@
 		|StarSingleJump
 		|StarDoubleJump
 		|StarTripleJump
-		|TripleJumpEffect
+		|TripleJumpStar
 		|LowGravField
 		|HighGravField
 		|LowSpeedField
 		|HighSpeedField
-		|TelekidEnable
-		|TelekidDisable
-		|TeleKid
 	+Pastel
 		|PastelSpikeBlack
 		|PastelSpikeBlackU
@@ -291,7 +187,6 @@
 	+Vcoin
 		|VCoinGive
 		|VCoinTake
-		|VLineFlipper
 	+KTG
 		|JumpSwitchBlock
 		|JumpSwitchBlockOff
@@ -301,7 +196,7 @@
 		|DoubleJumpSwitchBlockOff
 	+WTW
 		|Yoshi
-		|SMWSaw
+		|SmwSaw
 		|Muncher
 	+Guy/IWBTG
 		|MegamanPiston
@@ -339,8 +234,6 @@
 		|GravDownBlock
 		|DownWater
 		|UpWater
-		|ShootRefresherL
-		|ShootRefresherR
 	|CoinFlip
 	|CoinNormal
 	|ClockOn
@@ -349,12 +242,106 @@
 	|ReverserOff
 	|ToggleBlockOn
 	|ToggleBlockOff
+	|ShootRefresherL
+	|ShootRefresherR
 	|Teleporter
 	|PatBall
++Level Objects
+	+Special Blocks
+		|ConveyorLeft
+		|ConveyorRight
+		|PushBlock
+		|LongPushBlock
+		|PushBlockSave
+		|LiftBlock
+		|MoveBlock
+		|YokuBlock
+		|SlipBlock
+		|M9Block
+		|M9Trigger
+		|DingBlock
+		|FakeBlock
+		|BreakBlock
+		|ActualYokuBlock
+		|YokuGroup
+		|YokuSpeedChanger
+		|DemoBlock
+	+Slopes
+		|SlopeTL
+		|SlopeTR
+		|SlopeBL
+		|SlopeBR
+		|SlopeBlock
+		|SlopeCircle
+		|SlopeCrescent
+		|SlopeBeam
+		|FunnySlope
+		|SlopePixel
+		|SlopeWobbly
+	+Waters
+		|ShapeWater
+		|Water1
+		|Water2
+		|Water3
+		|CatharsisWater
+		|NekoronWater
+		|NekoronAir
+		|UpdraftWater
+		|WaterNoJump
+		|PlatformWater
+		|GuyWater
+	+Misc. Killers
+		|LeekUp
+		|LeekLeft
+		|LeekRight
+		|LeekDown
+		|Fig
+		|Wasp
+	+Difficulty Objects
+		+Medium (destroys on Hard/VH)
+			|MediumBlock
+			|SpikeMediumD
+			|SpikeMediumL
+			|SpikeMediumR
+			|SpikeMediumU
+			|MiniSpikeMediumD
+			|MiniSpikeMediumL
+			|MiniSpikeMediumR
+			|MiniSpikeMediumU
+		+Hard (destroys on Med)
+			|HardBlock
+			|SpikeHardD
+			|SpikeHardL
+			|SpikeHardR
+			|SpikeHardU
+			|MiniSpikeHardD
+			|MiniSpikeHardL
+			|MiniSpikeHardR
+			|MiniSpikeHardU
+		+VHard (destroys on Med/Hard)
+			|VHardBlock
+			|SpikeVHardD
+			|SpikeVHardL
+			|SpikeVHardR
+			|SpikeVHardU
+			|MiniSpikeVHardD
+			|MiniSpikeVHardL
+			|MiniSpikeVHardR
+			|MiniSpikeVHardU
+	|KillBlock
+	|DieOutside
+	|Ladder
+	|LadderSide
+	|GateUp
+	|GateRight
+	|GateLeft
+	|GateDown
+	|ScreenWrap
+	|Signpost
+	|AutoSign
 	|AlignIndicator
-	|InfiniteJump
-	|ExampleNpc
-	|CameraRoomViewer
+	|WarpToHub
+	|DifficultyWarp
 +Tools
 	+Shaders
 		|DepthHueShift
@@ -374,17 +361,13 @@
 		|TextDraw
 		|Autotiler
 		|DropShadow
-		|SkyGradient
+		|SkyGradient2Colors
 		|PersistentBackgrounds
 		|ParallaxBackgroundLayer
 	|CameraFull
 	|CameraOverride
 	|CameraBlock
 	|CameraFocus
-	|ScreenWrap
-	|OutsideWarp
-	|DieOutside
-	|MusicPlayer
 	|MusicPlayerSection
 	|MusicSync
 	|TimerFreeze
@@ -467,7 +450,6 @@
 +System
 	+User Interface
 		|VolCheck
-		|CopySettings
 		|TitleMenu
 		|FileMenu
 		|OptionsMenu
@@ -481,21 +463,97 @@
 		|BloodEmitter
 		|GibParticle
 		|Blood
+		|Bullet
 		|GameOver
 	|Ortho
 	|DestroyedBlock
 	|FirePart
+	|Cementer
 	|BackgroundDaemon
 	|WaterSurface
+	|AnyWater
 	|UnsolidItemBlock
-	|PropBlood
 	|Fader
-	|SoundEvent
-	|DialogEngine
-|PlayerStart
-|Block
-|Platform
-|SpikeD
-|SpikeL
-|SpikeR
-|SpikeU
+	|PropBlood
++Parents (don't use directly)
+	|PlayerKiller
+	|PlayerKillerActive
+	|DotKiller
+	|ActiveParent
+	|ActiveIngame
+	|SavePointParent
+	|Trigger
+	|Triggered
+	|TriggerLock
+	|Button
+	|ButtonShoot
+	|Boss
+	|Avoidance
+	|Gizmo
+	|Trap
+	|TrapSave
+	|Item
+	|GlobalItem
+	|DisplayItem
+	|DisplayGlobalItem
+	|ItemBlock
+	|SolidItemBlock
+	|KeyParent
+	|KeyBlockParent
+	|SlopeParent
+	|MovingSolid
+	|SuperVehicle
+	|VandalCherryBase
++GUI
+	+Buttons
+		+Menu Buttons
+			|objMenuButtonParent
+			|objSaveMap
+			|objLoadMap
+			|objImportJmap
+			|objClearMap
+			|objGridLines
+			|objCloseMenu
+			|objQuit
+			|objMoveUp
+			|objMoveDown
+			|objMoveLeft
+			|objMoveRight
+			|objChangeSkin
+			|objDepthOrder
+			|objGodmode
+			|objInfJump
+			|objScreenshot
+			|objTrailLength
+			|objTrailView
+		+Sidebar Buttons
+			|objButtonParent
+			|objTabButton
+			|objSelectable
+			|objGridSnap
+			|objGameSpeed
+			|objDeathCount
+			|objOpenMenu
+			|objInfo
+			|objEditButton
+	|objAlignDisplay
+	|objJumpDisplay
+	|objFPSDisplay
+	|objMenu
+	|objPopup
+	|objInfoPopup
+	|objDepthOrderPopup
++Meow System
+	|objObjSelect
+	|objKeyLogger
+	|objSkinManager
+	|objUndoRedo
+	|objDrawGrid
++Custom Gimmicks
+	|ZeroGravField
+	|FakeWarp
+	|GravPlatformBoth
+	|GravPlatformDown
+	|GravPlatformUp
+	|LucsterBubble
+	|OneTimePlatform

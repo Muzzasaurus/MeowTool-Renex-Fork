@@ -1,14 +1,12 @@
 //load gimmicks
-
 with (Player) {
+    slomo=savedata("slomo")
     dot_hitbox=savedata("whitedot")
     dotkid=savedata("dotkid")
-    telekid=savedata("telekid")
+    shootkid=savedata("shootkid")
     maxjumps=savedata("numjumps")
     vvvvvv=savedata("vvvvvv")
     beamstate=savedata("beamstate")
 }
-
-de_load(savedata("dialog"))
 
 //add your custom load code here

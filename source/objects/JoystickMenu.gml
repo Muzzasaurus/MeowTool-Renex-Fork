@@ -10,7 +10,7 @@ sel=vii_sizeof
 xdraw=120
 ydraw=80
 xsep=560
-ysep=24
+ysep=32
 
 ycursor=0
 
@@ -155,7 +155,7 @@ for (j=0;j<joycount;j+=1) {
         joy_button[j,b]=settings("joymap_"+name+"_"+string(b))
     }
 }
-/*
+
 if (joycount==0) {
     input_clear()
     i=instance_create(x,y,OptionsMenu)
@@ -172,10 +172,8 @@ applies_to=self
 draw_set_color(global.text_color)
 
 draw_set_halign(1)
-draw_set_font(fntOptions)
-if (joycount==0) {
-    draw_text(400,64,"- "+lang("no bitches?")+" -")
-} else if (joy==-1) {
+draw_set_font(fntFileBig)
+if (joy==-1) {
     draw_text(400,64,"- "+lang("joypushtosel")+" -")
 } else {
     if (lit) draw_text(400,64,"> ("+string(joy+1)+") "+joystick_name(joy)+" <")
@@ -189,7 +187,7 @@ for (i=0;i<=vii_sizeof;i+=1) {
     draw_text(xdraw+xsep,ydraw+(i)*ysep+32,keytext[i])
 }
 
-draw_sprite(sprite_index,floor(image_index),xdraw-20,ycursor)
+draw_sprite(sprPlayerIdle,floor(image_index),xdraw-20,ycursor)
 
 //button info
 draw_set_font(fntFileSmall)

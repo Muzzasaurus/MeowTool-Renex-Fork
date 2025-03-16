@@ -1,5 +1,5 @@
 sprite=sprSlopeBL
-visible=0
+visible=1
 solid=1
 persistent=0
 depth=0

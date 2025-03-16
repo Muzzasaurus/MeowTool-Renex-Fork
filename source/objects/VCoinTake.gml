@@ -11,9 +11,9 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-if (other.vvvvvv) {
-    sound_play_auto("sndVCoin")
+if (other.vvvvvv && visible) {
+    sound_play_slomo("sndVCoin")
     other.vvvvvv=false
     change_skin(skin_default)
-    instance_destroy()
+    visible=false
 }

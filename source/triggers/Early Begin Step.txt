@@ -1,2 +1,0 @@
-constant=tr_earlybeginstep
-kind=1

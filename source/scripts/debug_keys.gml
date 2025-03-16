@@ -37,7 +37,7 @@ if (current_speed!=target_speed) {
 
 if (is_ingame()) {
     if (keyboard_check_pressed(vk_tab) || (keyboard_check(vk_shift) && keyboard_check(vk_tab))) {
-        move_player(mouse_room_x(),mouse_room_y(),0)
+        move_player(mouse_xfixed,mouse_y,0)
         show_message_right("player to cursor")
         Player.speed=0
     }
@@ -73,9 +73,9 @@ if (is_ingame()) {
         else show_message_right("infinite jump off")
     }
 
-    if (keyboard_check_pressed(ord("H"))) {
+    if (keyboard_check_pressed(vk_control)) {
         with (Player) flip_player()
-        sound_play_auto("sndFlip")
+        sound_play_slomo("sndFlip")
         show_message_right("flip player")
     }
 
@@ -91,7 +91,7 @@ if (is_ingame()) {
         warp_to(room_previous(room))
     }
 
-    if (mouse_check_button_pressed(mb_right)) {
+    /*if (mouse_check_button_pressed(mb_right)) {
         func=show_menu("Debug Menu|-|Go to...|Infinite Jump|Godmode|Hitboxes|Autofire|Save Here",0)
         if (func=1) {
             s="Select room:|-"
@@ -120,7 +120,7 @@ if (is_ingame()) {
         }
         if (func=5) {global.debug_autofire=!global.debug_autofire}
         if (func=6) {savedata_save(true,"debug")}
-    }
+    }*/
 
     if (global.debug_autofire) {
         global.debug_autofire_counter=(global.debug_autofire_counter+1) mod 4

@@ -29,15 +29,112 @@
 	|sprAvdCtrl
 	|sprLamp
 	|sprDropShadow
-	|sprGameClear
 	|sprGameMakerBlock
 	|sprFader
 	|sprFadeWarp
-	|sprSoundEvent
-	|sprTrap
-	|sprSpinner
-	|sprSpinnerHitbox
-	|sprCameraRoomViewer
++Saves
+	|sprSaveMedium
+	|sprSaveHard
+	|sprSaveUpsideDown
+	|sprSaveVeryHard
+	|sprSaveVeryHardEditor
++Cherries
+	|sprCherry
+	|sprCherryOrange
+	|sprCherryYellow
+	|sprCherryChartreuse
+	|sprCherryGreen
+	|sprCherryEmerald
+	|sprCherryCyan
+	|sprCherryAzure
+	|sprCherryBlue
+	|sprCherryViolet
+	|sprCherryMagenta
+	|sprCherryPink
+	|sprCherryWhite
+	|sprCherryGray
+	|sprCherryBlack
+	|sprCherryRainbow
+	|sprPhg
+	+Guy Cherries
+		|sprCherryNew
+		|sprCherryOrangeNew
+		|sprCherryYellowNew
+		|sprCherryChartreuseNew
+		|sprCherryGreenNew
+		|sprCherryEmeraldNew
+		|sprCherryCyanNew
+		|sprCherryAzureNew
+		|sprCherryBlueNew
+		|sprCherryVioletNew
+		|sprCherryMagentaNew
+		|sprCherryPinkNew
+		|sprCherryWhiteNew
+		|sprCherryGrayNew
+		|sprCherryBlackNew
+		|sprCherryRainbowNew
++Level Objects
+	|sprEngineBlock
+	|sprYoku
+	|sprLongBlock
+	|sprPushBlockSave
+	|sprUnsolid
+	|sprDemoBlock
+	|sprWarp
+	|sprWarpTransparent
+	|sprDynamicPlatform
+	|sprOneTimePlatform
+	|sprUpPlatform
+	|sprJumpThrough
+	|sprPlatform9slice
+	|sprBlock
+	|sprSlipBlock
+	|sprBulletBlock
+	|sprMiniBlock
+	|sprKillBlock
+	|sprDieOutside
+	|sprConveyorLeft
+	|sprConveyorRight
+	|sprSlopeTL
+	|sprSlopeTR
+	|sprSlopeBL
+	|sprSlopeBR
+	|sprSlopeEighth
+	|sprSlopeCrescent
+	|sprSlopeBeam
+	|sprSlopeBlock
+	|sprSlopeWobbly
+	|sprGateUp
+	|sprGateRight
+	|sprGateLeft
+	|sprGateDown
+	|sprWrap
+	|sprHashigo_tate
+	|sprHashigo_yoko
+	|sprKanban
+	|sprWater1
+	|sprWater2
+	|sprWater3
+	|sprCatharsisWater
+	|sprNekoronWater
+	|sprNekoronAir
+	|sprUpdraftWater
+	|sprVegetable
+	|sprPlatformWater
+	|sprIWBTGWater
+	|sprPastelWater2
+	|sprWallJUmpLEditor
+	|sprWallJumpL
+	|sprWallJumpREditor
+	|sprWallJumpR
+	|sprFakeBlock
+	|sprDingBlock
+	|sprM9
+	|sprM9Trigger
+	|sprMediumBlock
+	|sprHardBlock
+	|sprVHardBlock
+	|sprAligner
 +Player
 	|sprMaskPlayer
 	|sprMaskPlayerFlip
@@ -84,111 +181,15 @@
 		|sprPlayerFallC
 		|sprPlayerFallOldC
 		|sprPlayerIdleC
-+Cherries
-	|sprCherry
-	|sprCherryOrange
-	|sprCherryYellow
-	|sprCherryChartreuse
-	|sprCherryGreen
-	|sprCherryEmerald
-	|sprCherryCyan
-	|sprCherryAzure
-	|sprCherryBlue
-	|sprCherryViolet
-	|sprCherryMagenta
-	|sprCherryPink
-	|sprCherryWhite
-	|sprCherryGray
-	|sprCherryBlack
-	|sprCherryRainbow
-	|sprPhg
-	+Guy Cherries
-		|sprCherryNew
-		|sprCherryOrangeNew
-		|sprCherryYellowNew
-		|sprCherryChartreuseNew
-		|sprCherryGreenNew
-		|sprCherryEmeraldNew
-		|sprCherryCyanNew
-		|sprCherryAzureNew
-		|sprCherryBlueNew
-		|sprCherryVioletNew
-		|sprCherryMagentaNew
-		|sprCherryPinkNew
-		|sprCherryWhiteNew
-		|sprCherryGrayNew
-		|sprCherryBlackNew
-		|sprCherryRainbowNew
-+Level Objects
-	+Saves
-		|sprSaveMedium
-		|sprSaveHard
-		|sprSaveVeryHard
-		|sprSaveVeryHardEditor
-	|sprEngineBlock
-	|sprYoku
-	|sprLongBlock
-	|sprPushBlockSave
-	|sprUnsolid
-	|sprDemoBlock
-	|sprWarp
-	|sprSectionWarp
-	|sprWarpTransparent
-	|sprDynamicPlatform
-	|sprUpPlatform
-	|sprJumpThrough
-	|sprPlatform9slice
-	|sprBlock
-	|sprSlipBlock
-	|sprBulletBlock
-	|sprMiniBlock
-	|sprKillBlock
-	|sprDieOutside
-	|sprConveyorLeft
-	|sprConveyorRight
-	|sprSlopeTL
-	|sprSlopeTR
-	|sprSlopeBL
-	|sprSlopeBR
-	|sprSlopeEighth
-	|sprSlopeCrescent
-	|sprSlopeBeam
-	|sprSlopeBlock
-	|sprSlopeWobbly
-	|sprGateUp
-	|sprGateRight
-	|sprGateLeft
-	|sprGateDown
-	|sprWrap
-	|sprHashigo_tate
-	|sprHashigo_yoko
-	|sprKanban
-	|sprWater1
-	|sprWater2
-	|sprWater3
-	|sprCatharsisWater
-	|sprNekoronWater
-	|sprNekoronAir
-	|sprPlatformWater
-	|sprIWBTGWater
-	|sprPastelWater2
-	|sprWallJUmpLEditor
-	|sprWallJumpL
-	|sprWallJumpREditor
-	|sprWallJumpR
-	|sprFakeBlock
-	|sprDingBlock
-	|sprM9
-	|sprM9Trigger
-	|sprMediumBlock
-	|sprHardBlock
-	|sprVHardBlock
-	|sprAligner
-+Spikes
++Threats
 	|sprSpike
 	|sprSpikeLeft
 	|sprSpikeRight
 	|sprSpikeUp
+	|sprSpikeTrap
+	|sprSpikeLeftTrap
+	|sprSpikeRightTrap
+	|sprSpikeUpTrap
 	|sprSpikeBlue
 	|sprSpikeLeftBlue
 	|sprSpikeRightBlue
@@ -247,6 +248,7 @@
 	|sprMiniSpikeLeftVHard
 	|sprMiniSpikeRightVHard
 	|sprMiniSpikeUpVHard
+	|sprWasp
 +Gimmicks
 	+WTW
 		|sprYoshiMask
@@ -257,13 +259,16 @@
 		|sprYoshiRunning
 		|sprYoshiJump
 		|sprMuncher
-		|sprSMWSaw
+		|sprSmwSaw
 	+White Dot
 		|sprWhiteDotter
 		|sprWhiteUndotter
 	+Dotkid
 		|sprDotter
 		|sprUndotter
+	+Shootkid
+		|sprShootkidEnabler
+		|sprShootkidDisabler
 	+Keypick
 		|sprKeyWhite
 		|sprKeyRed
@@ -284,8 +289,6 @@
 		|sprStarDoubleJump
 		|sprStarTripleJump
 		|sprNangTJumpParticle
-		|sprTelekidEnabler
-		|sprTelekidDisabler
 	+See the Moon
 		|sprBeamPurple
 		|sprBeamYellow
@@ -295,7 +298,6 @@
 	+Vcoin
 		|sprVCoinA
 		|sprVCoinB
-		|sprVLineFlipper
 	+KTG
 		|sprJumpSwitchBlock
 		|sprJumpSwitchBlockOff
@@ -355,8 +357,6 @@
 	|sprToggleBlockOff
 	|sprPatBall
 	|sprVuur
-	|sprWasp
-	|sprJumpManyTimes
 +Triggers
 	+Triggers
 		|sprTrigger1
@@ -428,6 +428,7 @@
 	|sprGlobalItem2
 	|sprGlobalItem3
 	|sprGlobalItem4
+	|sprGameClear
 	|sprCoin
 +Avoidance/Miku
 	|sprMiku
@@ -437,7 +438,16 @@
 	|sprAvoidanceBulletMedium
 	|sprMoonBullet
 	|sprMikuLeek
-+Dialog
-	|sprPlayerPortrait
-	|sprNpcPortrait
-	|sprNpc
+|sprButtonMask
+|sprGridButtonMask
+|sprZeroG
+|sprSidebar
+|sprMenu
+|sprGravPlatformBoth
+|sprGravPlatformDown
+|sprGravPlatformUp
+|sprPopupButton
+|sprDotfield
+|sprNotfield
+|sprLucsterBubble
+|sprScaleButton

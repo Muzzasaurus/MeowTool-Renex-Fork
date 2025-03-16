@@ -1,2 +1,0 @@
-constant=tr_playerdeath
-kind=0

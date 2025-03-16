@@ -42,10 +42,10 @@ if (lost) {
 
     if (bleeding) {
         bleeding-=1
-        y-=20+20*vflip
+        y-=40
         x+=10*image_xscale
         emit_prop_blood(10*settings("blood"))
-        y+=20+20*vflip
+        y+=40
         x-=10*image_xscale
     }
 
@@ -60,8 +60,6 @@ if (lost) {
     angle=max(-20,angle-0.5)
 } else if (active) {
     //yoshi is being ridden
-
-    gravity=0.4*vflip
 
     hspeed=macro_leftright()*4
     vspeed=min(vspeed,11)
@@ -78,14 +76,7 @@ if (lost) {
     } else sprite_index=sprYoshiStand
 
     if (key_jump(vi_pressed)) {
-        if (instance_place(x,y+vflip,Block)) {
-            if (passenger.vvvvvv) {
-                vflip=-vflip
-                if (vflip==-1) sound_play_auto("sndVFlip1")
-                else sound_play_auto("sndVFlip2")
-            } else vspeed=-11*vflip
-            passenger.vflip=vflip
-        }
+        if (instance_place(x,y+1,Block)) vspeed=-11*vflip
     }
     if (key_jump(vi_released)) {
         if (vspeed*vflip<0) vspeed*=0.45
@@ -93,27 +84,16 @@ if (lost) {
 
     if (key_shoot(vi_pressed)) {
         //kill yoshi
-        sound_play_auto("sndShoot")
-        sound_play_auto("sndDeath")
+        sound_play("sndShoot")
+        sound_play("sndDeath")
 
         vehicle_dismount()
         passenger.y-=20*vflip
-        with (passenger) if (object_is_child_of(Player)) {
-            if (vvvvvv) {
-                flip_player()
-                vspeed=maxVspeed*vflip
-                sound_play_auto("sndVLineFlip")
-            } else vspeed=other.vspeed
-        }
+        passenger.vspeed=vspeed
         vspeed=0
 
         dead=1
         bleeding=10*settings("blood")
-    }
-
-    if (passenger.vvvvvv) {
-        if (vflip== 1 && vspeed!=0) vspeed= 11
-        if (vflip==-1 && vspeed!=0) vspeed=-11
     }
 
     var land,store_y,was_on_slope,is_going_into_slope,grav_step;
@@ -214,7 +194,7 @@ applies_to=self
 ///yoshi mount condition
 
 if (!other.dotkid && other.vflip==vflip && other.vspeed*other.vflip>0 && !dead && !lost) {
-    vehicle_mount(other.id,0)
+    vehicle_mount()
 }
 #define Collision_PlayerKiller
 /*"/*'/**//* YYD ACTION
@@ -223,9 +203,9 @@ action_id=603
 applies_to=self
 */
 if (active) {
-    if (other.object_index=SMWSaw) {
+    if (other.object_index=SmwSaw) {
         if (y<=other.y-2) {
-            sound_play_auto("sndYoshiJump")
+            sound_play("sndYoshiJump")
             if (key_jump())
                 vspeed=-15
             else
@@ -234,15 +214,9 @@ if (active) {
         }
     }
 
-    sound_play_auto("sndYoshi2")
+    sound_play("sndYoshi2")
 
     passenger.vspeed=vspeed
-
-    with (passenger) if (vvvvvv) {
-        flip_player()
-        vspeed=maxVspeed*vflip
-        sound_play_auto("sndVLineFlip")
-    }
 
     lost=1
     vspeed=-8*vflip
@@ -266,9 +240,7 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-if (active) if (passenger.vvvvvv) d3d_set_fog(1,$d9a401,0,0)
-draw_sprite_ext(sprite_index,floor(image_index),x,y-16+16*vflip,image_xscale,vflip,angle,image_blend,image_alpha)
-if (active) if (passenger.vvvvvv) d3d_set_fog(0,0,0,0)
+draw_sprite_ext(sprite_index,floor(image_index),x,y,image_xscale,image_yscale,angle,image_blend,image_alpha)
 #define Trigger_Vehicle Mount
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -280,4 +252,4 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-sound_play_auto("sndYoshi")
+sound_play("sndYoshi")

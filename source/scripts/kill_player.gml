@@ -1,5 +1,5 @@
 if (!object_is_child_of(Player)) with (Player) kill_player()
-else if (!dead) {
+else if (!dead) and (!Player.godMode) {
     if (room==global.difficulty_room) {
         if (global.diffroom_instantrestart) {
             Player.dead=1
@@ -11,7 +11,7 @@ else if (!dead) {
     if (global.debug_god) {
         if (!flashing) {
             flashing=room_speed
-            sound_play_auto("sndBossHit")
+            sound_play("sndBossHit")
             deathlist[1+deathlist[0]*2]=x
             deathlist[2+deathlist[0]*2]=y
             deathlist[0]+=1
@@ -21,7 +21,7 @@ else if (!dead) {
             if (!flashing) {
                 HPMode.hp-=1
                 flashing=HPMode.iframes
-                sound_play_auto(HPMode.sound)
+                sound_play(HPMode.sound)
                 emit_blood(10*settings("blood"))
             }
             if (HPMode.hp>0) exit
@@ -31,24 +31,14 @@ else if (!dead) {
             if (!flashing) {
                 HitCount.hits+=1
                 flashing=HitCount.iframes
-                sound_play_auto(HitCount.sound)
+                sound_play(HitCount.sound)
             }
         } else {
-            trigger_broadcast(tr_playerdeath)
-
             if (global.gameover_music==0) {
                 //jingle option
-                if (global.restarting_music) {
-                    if (instance_exists(MusicSync)) instance_destroy_id(MusicSync)
-                    else sound_stop_music()
-
-                    global.death_music_id=sound_play(global.death_music)
-                } else {
-                    if (instance_exists(MusicSync)) instance_destroy_id(MusicSync)
-                    else if (global.music_instance) sound_pause(global.music_instance)
-
-                    global.death_music_id=sound_play(global.death_music)
-                }
+                if (global.restarting_music) sound_stop_music()
+                else sound_fade_music(0,0,1)
+                sound_play("m-r-tight")
             } else if (global.gameover_music==1) {
                 //fade option
                 sound_fade_music(0,100,1)
@@ -64,18 +54,17 @@ else if (!dead) {
 
             drop_items()
 
-            vehicle_dismount()
-
-            sound_play_auto("sndDeath")
+            sound_play_slomo("sndDeath")
 
             instance_create(x,y,BloodEmitter)
-            instance_create(view_xcenter,view_ycenter,GameOver)
+            //instance_create(view_xcenter,view_ycenter,GameOver)
 
             with (FireballCherry) if (active) instance_destroy()
 
             Player.dead=true
 
             savedatap("deaths",savedatap("deaths")+1)
+            with (objDeathCount) deaths+=1
         }
     }
 }

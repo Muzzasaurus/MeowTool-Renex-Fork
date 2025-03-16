@@ -1,5 +1,4 @@
-/*
-Called when a Gizmo or Trap object is meant to activate. Usually launched by a Trigger, but sometimes called by specific trigger objects for certain gimmicks.
-*/
+//this trigger event is called when an engine
+//trigger is activated in contact with a gizmo
 
 return 0

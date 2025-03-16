@@ -5,7 +5,8 @@ if (is_ingame()) {
 }
 
 //restore fading/slowing music
-sound_fade_music(1,0,0)
+fading=0
+fadefrom=1
 slowing=0
 slowfrom=1
 sound_kind_pitch(1,1)
@@ -27,4 +28,3 @@ memcamt=-1
 camera_shake(0)
 
 global.room_started=false
-global.lastroom=room

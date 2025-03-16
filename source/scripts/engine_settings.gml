@@ -1,12 +1,21 @@
 /*
 
-    RENEX² ENGINE
-    =============
-    version 1.8.0
-    December 2024
+    RENEX ENGINE
+    ============
+    version 1.7.0
+    July 2023
 
   A modern fork of various Game Maker 8 I Wanna Be The Guy fangame
   engines with hundreds of improvements and new features.
+
+  Made by renex with vast contributions from
+  the following people at the time of release:
+
+  ---------------------------------------
+  \  Floogle  Starz0r  Verve  Duncan  V \
+  \  Jopagu  Plasma  Square  roaming97  \
+  \  Various other fangame developers   \
+  ---------------------------------------
 
 */
 
@@ -14,45 +23,38 @@
 global.release_mode=false
 
 //game properties
-    global.game_title="renex² engine"
+    global.game_title="Meow Tool v0.85"
     //intended room speed
     //note: player always runs at 50hz! look in player step for an explanation
     global.game_speed=50
     //game screen+window size
-    global.width=800
+    global.width=1056
     global.height=608
     //first room that's actually part of the game
-    global.first_room=rmHub
+    global.first_room=rmBuild
     //room to return to when using WarpToHub object
-    global.hub_room=rmHub
+    global.hub_room=rmBuild
     //password for encrypting saves
     //if you don't want a password, use "" for the save files to be unencrypted dsmaps
-    global.encrypt_save_password="squenex"
+    global.encrypt_save_password="renex"
     //save game to appdata instead of a /save folder
     global.use_appdata=false
     //data folder location (make sure to include the data folder with your exe!)
     global.datadir="data\"
     //use savefile thumbnails
-    global.savefile_thumbnails=true
+    global.savefile_thumbnails=false
     //user interface text color
     global.text_color=$ffffff
-    global.filemenu_color=$ffffff
     //enable test mode in exe builds
     //do not forget to disable this when publishing your game
     global.always_test_mode=false
     //disable the player delta time system (see Player step event action 1)
-    global.disable_delta_time=false
-    //disable the global settings repository
-    //use this when you don't want the engine to remember the last game's options
-    global.disable_settings_repo=false
+    global.disable_delta_time=true
 
 
 //difficulties
     //difficulty options:
-    add_difficulty("Medium",false,false)
-    add_difficulty("Hard",true,false)
-    add_difficulty("Very Hard",false,false)
-    add_difficulty("Impossible",false,true)
+    add_difficulty("Building",false,false)
 
     //you can replace these with bow/no bow for example, or even add more
     //there is a globalvar called "difficulty" that's automatically set for you
@@ -78,15 +80,17 @@ global.release_mode=false
 //game behavior
     global.fullscreen_cursor_visible=false
     //fullscreen caption options
-    global.fullscreen_caption_visible=true
+    global.fullscreen_caption_visible=false
     global.fullscreen_caption_color=$ffff
     global.fullscreen_caption_font=fntSignpost
     //don't go back to the menu - quit the game immediately when pressing esc
-    global.esc_always_quits=false
+    global.esc_always_quits=true
     //automatically updates the window caption with deathtime
     global.show_deathtime=true
     //CRT closing animation (only on windowed)
     global.closing_animation=true
+    //jump refreshers respawn time - if set to zero, it only respawns when you land
+    global.jump_refresher_timer=0
     //if false, items are only collected upon saving normally
     //otherwise, items are collected immediately
     global.autosave_items=false
@@ -101,21 +105,24 @@ global.release_mode=false
     //press shoot to save when touching a save
     global.press_shoot_saves=false
     //let all saves work even while flipped the wrong way
-    global.flip_saves=true
-    //saves display the time they were first saved above them
-    global.idolmaster_saves=true
+    global.flip_saves=false
+    //saves display above them the time they were first saved
+    global.idolmaster_saves=false
     //save death & time stats in a .csv file in the save location
     //recommended to turn this off when publishing your game
-    global.save_csv_stats=false
+    global.save_csv_stats=true
     //use the brighter vhard save sprite instead of the regular one
     global.vhard_save_sprite=true
+    //(1-8) reduces lag during gameplay, but causes a small hiccup on room start
+    //each pass reduces solid instance count by almost half by gluing blocks together
+    //so with 2 passes we should only have around 30% of block instances
+    //if you need separate block objects, set this to 0
+    global.optimize_solids=0
     //make the NANG fields animate by scrolling the sprite
-    global.animated_nang_fields=true
+    global.animated_nang_fields=false
     //pause the game when unfocused (automatically unpauses when re-focused)
     //also doesn't open/close the pause menu if you paused manually
     global.unfocus_pause=false
-    //pause ingame timer after the save is marked as cleared
-    global.pause_time_after_clear=true
 
 
 //player settings
@@ -141,19 +148,17 @@ global.release_mode=false
     global.player_default_weapon=weapon_default
     //kill player when leaving the room region
     global.die_outside_room=true
-    //also kill the player when leaving the room off the top
-    global.die_outside_top=false
     //allow pressing A and D to move 1 pixel left and right to change your align
     //regardless of debug mode
-    global.a_d_trick=false
+    global.a_d_trick=true
     //make the Medium difficilty bow lag behind like in the original game
     global.bow_lag=true
+    //turns the kid's cape blue if the player can't double jump
+    global.celeste_cape=false
     //turns the kid's bow blue if the player can't double jump (only appears on Medium)
     global.celeste_bow=false
-    //enable distance vines (classic engine vine check using distance_to_object)
-    global.distance_vines=false
-    //allow the player to grab vines while on the floor
-    global.floor_vines=false
+    //prevents shootkid from working if too close to a wall
+    global.accurate_shootkid=true
     //angle the player (and the player's bullets) to match slopes
     global.angle_slopes=true
     //time in frames to disable pausing after exiting the pause menu
@@ -177,19 +182,16 @@ global.release_mode=false
     //2 - pause the level music immediately
     //3 - do nothing (music keeps playing)
     //4 - music slowdown
-    global.gameover_music=0
-    //game over music filename
-    //must be placed in the 'sounds' folder, but it functions as music ingame
-    global.death_music="m-r-tight"
+    global.gameover_music=3
     //block break sound:
     //0 - remastered sound effect
     //1 - yuuutu engine sound effect
     //2 - yosniper engine sound effect
     global.break_sound_effect=0
+    //pause all audio on pause
+    global.pause_sound_on_game_pause=true
     //stop sound effects when changing rooms
     global.stop_sounds_on_room_change=true
-    //disable automatic pan and volume
-    global.disable_autopanvol=false
 
 
 //cleaner physics --- not recommended to change when making traditional needle games
@@ -199,11 +201,12 @@ global.release_mode=false
     //jumps with the jump button regardless of the maker vines setting
     //vines do not work if not placed on top of a block
     global.clean_vines=false
-    //default platform snap behavior:
+    //platform snap behavior:
     //0 - yuuutu - inconsistent snap, how it works in most engines
     //1 - hard - always snap regardless of vertical movement, also snaps when near the top
     //2 - light - snaps only when near the top
     //3 - none - don't snap at all, act like one-way blocks
+    //you can also use the CustomSnap object if you want to use multiple snap types
     global.platform_snap_type=0
     //allows jumping while inside of platforms
     global.platform_swimming=true
@@ -234,12 +237,9 @@ global.release_mode=false
     global.default_camera_smoothing=true
     //frames to reach target destination if camera smoothing is enabled
     //higher number = camera moves slower
-    global.default_smoothing_rate=5
-    //deactivates instances outside of the view to save resources
-    //if your game is lagging on larger rooms, it may be useful to turn this on
-    //look inside of instance_deactivate_all_safe, instance_activate_all_safe,
-    //and custom_object_activation to see the rules and options of how this works
-    global.instance_deactivation=false
+    global.smoothing_rate=5
+    //deactivate instances outside of the view
+    global.instance_deactivation=true
     //how many screens to keep active, with 20 pixels of margin
     global.instance_activate_screens_w=1
     global.instance_activate_screens_h=1
@@ -254,7 +254,7 @@ global.release_mode=false
     //original iwbtg sound balance
     global.iwbtg_sound_mode=false
     //use nicely tiled long platforms instead of stretched sprite
-    global.platform_9slice=true
+    global.platform_9slice=false
     //oh yuo knwo
     global.restarting_music=false
     //mario

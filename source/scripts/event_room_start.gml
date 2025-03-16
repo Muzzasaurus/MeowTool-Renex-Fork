@@ -25,8 +25,6 @@ if (is_ingame()) {
         }
     }
 
-    with (SectionWarp) event_user(0)
-
     with (Player) if (!place_free(x,y)) if (!try_unstuck()) with (instance_nearest(x,y,PlayerStart)) move_player(x,y,0)
 
     event_world_endstep()
@@ -39,14 +37,20 @@ if (is_ingame()) {
 
 window_set_caption(room_caption)
 
-if (sound_isplaying(global.death_music)) {
-    sound_stop(global.death_music_id)
-}
-if global.music_instance!=noone sound_resume(global.music_instance)
-
 caption_opacity=1
 
 load_persistent_objects()
+
+if (global.optimize_solids) {
+    //now let's glue blocks to reduce instance count, but being mindful of green pastel spikes
+    with (PastelSpikeGreen) with (Block) if (object_index=Block && (x=other.x || y=other.y)) {
+        instance_change(Cementer,0)
+    }
+    cement(Block)
+    with (Cementer) {
+        instance_change(Block,0)
+    }
+}
 
 camera_default()
 
@@ -56,5 +60,3 @@ if (global.onload_trigger) {
     global.onload_trigger=false
     with (all) event_perform(ev_trigger,tr_onload)
 }
-
-check_engine_parenting()

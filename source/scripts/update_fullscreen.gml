@@ -1,8 +1,7 @@
 var s,full;
 
-window_delayed_center()
-
 full=settings("fullscreen")
+
 if (full) {
     window_set_region_scale(0,1)
     s=min(global.dw/global.width,global.dh/global.height)

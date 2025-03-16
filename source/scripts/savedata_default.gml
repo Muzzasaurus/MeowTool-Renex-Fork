@@ -25,9 +25,17 @@ global.player_weapon=global.player_default_weapon
 savedatap("skin",global.player_skin)
 savedatap("weapon",global.player_weapon)
 
-savedatap("slomo",1)
-savedatap("slomoto",1)
-savedatap("slomof",0)
+savedatap("grid",true)
+savedatap("godMode",false)
+savedatap("infJump",false)
+savedatap("trailView",false)
+savedatap("textureSkin",0)
+savedatap("skinCount",0)
+savedatap("trailLength",51)
+
+savedatap("blockDepth",0)
+savedatap("spikeDepth",10)
+savedatap("waterDepth",-50)
 
 ds_map_clear(global.persistmap)
 

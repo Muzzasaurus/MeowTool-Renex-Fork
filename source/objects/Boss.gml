@@ -29,12 +29,10 @@ if (savedata("boss"+object_get_name(object_index))) {
 
     maxhp=hp
 
-    if (make_subtitle) {
-        o=instance_create(x,y,BossIntroduction)
-        o.owner=id
-        o.str=name
-        o.str2=subtitle
-    }
+    o=instance_create(x,y,BossIntroduction)
+    o.owner=id
+    o.str=name
+    o.str2=subtitle
 }
 #define Destroy_0
 /*"/*'/**//* YYD ACTION

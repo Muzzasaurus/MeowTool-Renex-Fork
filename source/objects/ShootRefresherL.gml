@@ -13,6 +13,6 @@ applies_to=self
 */
 if (!image_index) {
     image_index=1
-    sound_play_auto("sndShootRefresher")
+    sound_play("sndShootRefresher")
     with (Player) djump=min(djump,maxjumps-1)
 }

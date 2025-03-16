@@ -9,7 +9,7 @@ sel=0
 xdraw=120
 ydraw=80
 xsep=560
-ysep=24
+ysep=32
 
 ycursor=0
 
@@ -100,7 +100,7 @@ applies_to=self
 draw_set_color(global.text_color)
 
 draw_set_halign(1)
-draw_set_font(fntOptions)
+draw_set_font(fntFileBig)
 draw_text(400,64,lang("keymenu"))
 
 for (i=0;i<=vii_sizeof;i+=1) {
@@ -110,7 +110,7 @@ for (i=0;i<=vii_sizeof;i+=1) {
     draw_text(xdraw+xsep,ydraw+i*ysep+32,keytext[i])
 }
 
-draw_sprite(sprite_index,floor(image_index),xdraw-20,ycursor)
+draw_sprite(sprPlayerIdle,floor(image_index),xdraw-20,ycursor)
 
 //button info
 draw_set_font(fntFileSmall)

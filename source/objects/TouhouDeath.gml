@@ -8,6 +8,7 @@ f1=0
 f2=0
 f3=0
 timer=0
+sound_play("sndBossDeath")
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1

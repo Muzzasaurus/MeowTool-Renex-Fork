@@ -1,2 +1,0 @@
-constant=tr_earlyendstep
-kind=2

@@ -11,5 +11,5 @@ if (argument_count==0) {
 } else {
     World.messagetext=argument[0]
     if (argument_count>1) World.message=argument[1]
-    else World.message=200
+    else World.message=100
 }

@@ -14,7 +14,7 @@ and in full camera mode it'll slide around it.
 This object can also be solid.
 */
 
-//field solid: true
+//field solid: bool
 
 if (solid) with (instance_create(x,y,Block)) {
     image_xscale=other.image_xscale

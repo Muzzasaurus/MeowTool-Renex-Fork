@@ -25,7 +25,7 @@ applies_to=self
 */
 if (go) {
     timer+=1
-    if (timer==1) sound_play_auto("sndBlockChange")
+    if (timer==1) sound_play("sndBlockChange")
     image_index=max(0,image_index-0.5)
     if (timer>=mygroup.delay) {
         go=0
@@ -42,4 +42,4 @@ action_id=603
 applies_to=self
 */
 //field next: instance
-//field first: false
+//field first: bool

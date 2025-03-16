@@ -1,20 +1,4 @@
 |rmInit
-|rmTitle
-|rmMenu
+|rmWait2FramesLol
+|rmBuild
 |rmOptions
-+Game
-	|rmDifficulty
-	|rmHub
-	+Example Rooms
-		|rmDemo
-		|rmDemo2
-		|rmBoss1
-		|rmClassic
-		|rmClassic2
-		|rmMiku
-		|rmMikuNew
-		|rmExtra
-		|rmExBoss
-		|rmShaders
-		|rmClear
-	|rmTemplate

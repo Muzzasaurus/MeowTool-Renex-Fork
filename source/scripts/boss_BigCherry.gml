@@ -6,7 +6,6 @@ if (event_type==ev_other && event_number==ev_room_start) {
 }
 
 if (event_type==ev_create) {
-    make_subtitle=1
     name="Big Cherry"
     subtitle="Celebrate100" 
     hp=150
@@ -51,10 +50,10 @@ if (event_type==ev_step) {
         hp-=10
         if (hp<=0) {
             //defeated
-            sound_play_auto("sndDeath")
+            sound_play("sndDeath")
             instance_destroy()
         } else {
-            sound_play_auto("sndBossHit")
+            sound_play("sndBossHit")
             vulnerable=false
             flash=10
             flashtime=6            

@@ -2,6 +2,7 @@
 with (World) {
     if (!gameclosing) {
         settings_write()
+        savedata_write()
         gameclosing=1
         if (global.closing_animation && !window_get_fullscreen() && !global.test_run) {
             window_set_showborder(0)

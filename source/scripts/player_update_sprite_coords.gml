@@ -1,5 +1,5 @@
-if (framefac==ff_immediate) {
-    //immediate mode for 50hz no slowdown
+if (framefac==2) {
+    //immediate mode for 50hz
     drawx=x
     drawy=y
     drawspr=sprite_index

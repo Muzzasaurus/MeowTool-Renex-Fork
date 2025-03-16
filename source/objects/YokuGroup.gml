@@ -23,7 +23,7 @@ if (first) {
                 go=0
                 timer=0
             }
-            sound_play_auto("sndBlockChange")
+            sound_play("sndBlockChange")
         }
         active=0
     }

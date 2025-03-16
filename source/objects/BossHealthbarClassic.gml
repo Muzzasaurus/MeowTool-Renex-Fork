@@ -1,8 +1,3 @@
-#define Draw_0
-/*"/*'/**//* YYD ACTION
-lib_id=1
-action_id=425
-*/
 #define Trigger_Draw GUI
 /*"/*'/**//* YYD ACTION
 lib_id=1

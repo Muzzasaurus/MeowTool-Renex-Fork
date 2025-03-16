@@ -5,9 +5,6 @@ action_id=603
 applies_to=self
 */
 on=0
-
-user_draw_begin=1
-user_draw_end=2
 #define Other_4
 /*"/*'/**//* YYD ACTION
 lib_id=1
@@ -35,13 +32,29 @@ if (on) {
     }
     background_showcolor=bg_showcolor
 }
-#define Other_11
+#define Other_10
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
 applies_to=self
 */
-///draw begin
+///fix backgrounds
+
+if (!on) {
+    on=1
+    for (i=0;i<8;i+=1) {
+        bg_visible[i]=background_visible[i]
+        background_visible[i]=0
+    }
+    bg_showcolor=background_showcolor
+    background_showcolor=0
+}
+#define Draw_0
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
 var i;
 
 if (bg_showcolor) {
@@ -50,10 +63,10 @@ if (bg_showcolor) {
     else draw_clear(background_color)
 }
 
-with (all) if (visible) event_perform(ev_trigger,tr_draw_beneath)
+draw_before_backgrounds()
 
 for (i=0;i<8;i+=1) {
-    if (bg_visible[i] && background_exists(background_index[i]) && !background_foreground[i]) {
+    if (bg_visible[i] && background_exists(background_index[i])) {
         draw_background_tiled_extra(
             background_index[i],
             background_x[i],
@@ -69,32 +82,4 @@ for (i=0;i<8;i+=1) {
     }
 }
 
-with (all) if (visible) event_perform(ev_trigger,tr_draw_begin)
-#define Other_12
-/*"/*'/**//* YYD ACTION
-lib_id=1
-action_id=603
-applies_to=self
-*/
-///draw end
-
-with (all) if (visible) event_perform(ev_trigger,tr_draw_end)
-
-for (i=0;i<8;i+=1) {
-    if (bg_visible[i] && background_exists(background_index[i]) && background_foreground[i]) {
-        draw_background_tiled_extra(
-            background_index[i],
-            background_x[i],
-            background_y[i],
-            background_xscale[i],
-            background_yscale[i],
-            0,
-            background_blend[i],
-            background_alpha[i],
-            !background_htiled[i],
-            !background_vtiled[i]
-        )
-    }
-}
-
-with (all) if (visible) event_perform(ev_trigger,tr_draw_above)
+with (all) if (visible) event_perform(ev_trigger,ev_draw_begin)

@@ -4,11 +4,18 @@ keyboard=false
 
 //check keyboard
 if (global.infocus) for (i=0;i<vii_sizeof;i+=1) {
-    vii_key[i]=keyboard_check(vii_code[i])
-    if (!global.input_cleared) {
-        vii_press[i]=keyboard_check_pressed(vii_code[i])
+    //we check the key directly twice because of windows behavior, this fixes the input lag
+    //more detais on why can be found here:
+    //https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate#return-value
+    keyboard_check_direct(vii_code[i])
+    vii_key[i]=keyboard_check_direct(vii_code[i])
+
+    //process pressed and released states                   //filter out keyboard-repeat "presses" inbetween rooms,
+    if (!global.input_cleared) {                            //but ignore shift while doing that
+        vii_press[i]=keyboard_check_pressed(vii_code[i]) && (vii_prev[i]!=0 || vii_code[i]=vk_shift)
         vii_release[i]=keyboard_check_released(vii_code[i])
     }
+
     if (vii_key[i]) keyboard=true
 }
 
@@ -28,7 +35,7 @@ for (i=0;i<vii_sizeof;i+=1) {
         if (vii_key[i]) vii_prev[i]=min(0,vii_prev[i]+1)
         else vii_prev[i]=1
     }
-}    
+}
 
 //process joysticks added or removed
 joysfound=joystick_found()

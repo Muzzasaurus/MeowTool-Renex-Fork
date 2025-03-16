@@ -13,7 +13,8 @@ if (global.is_impossible[savedata("diff")]) {
 
 global.warp_id=""
 
-if (global.difficulty_room!=noone && room==rmMenu) {
+
+if (global.difficulty_room!=noone) {
     room_goto(global.difficulty_room)
 } else {
     if (savedata("saved")) {
@@ -25,6 +26,10 @@ if (global.difficulty_room!=noone && room==rmMenu) {
         i.image_yscale=savedata("height")
         i.facing=savedata("facing")
         i.vflip=savedata("vflip")
+        i.ladder=savedata("ladder")
+        if (i.ladder) {
+            i.gravity=0
+        }
         with (i) script_execute(global.player_skin,"mask")
 
         difficulty=savedata("diff")
@@ -34,12 +39,8 @@ if (global.difficulty_room!=noone && room==rmMenu) {
         global.onload_trigger=true
     }
 
-    global.slomo=savedata("slomo")
-    global.slomoto=savedata("slomoto")
-    global.slomof=savedata("slomof")
-
     custom_load()
     global.itemcount=savedata("itemcount")
 
-    room_goto(savedata("room"))
+    //room_goto(savedata("room"))
 }

@@ -4,7 +4,7 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-image_speed=0.5
+image_speed=0
 ready=false
 alarm[0]=5
 killcheck=true
@@ -32,6 +32,8 @@ action_id=603
 applies_to=self
 */
 if (ready) {
-    instance_create(x,y,ToggleBlockOff)
+    i=instance_create(x,y,ToggleBlockOff)
+    i.sprite_index=sprite_index
+    i.image_index=(sprite_index==sprToggleBlockOn)
     instance_destroy()
 }

@@ -21,4 +21,4 @@ applies_to=self
 */
 event_inherited()
 visible=1
-sound_play_auto('sndBolt')
+sound_play('sndBolt')

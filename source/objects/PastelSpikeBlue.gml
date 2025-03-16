@@ -4,7 +4,6 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-event_inherited()
 destroy=false //set to true in fields for one-time use
 waterSpeed=2  //how fast the water goes when it's created
 image_speed=0
@@ -29,8 +28,8 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-//field destroy: false - destroys the spike when shot
-//field spike_return: false - turns back to a regular spike when shot
+//field destroy: bool - destroys the spike when shot
+//field spike_return: bool - turns back to a regular spike when shot
 
 if (!spike_return) image_index=destroy
 else image_blend=c_ltgray

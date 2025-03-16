@@ -27,6 +27,6 @@ applies_to=self
 */
 if (!image_index) {
     image_index=1
-    sound_play_auto("sndButton")
+    sound_play("sndButton")
     event_inherited()
 }
